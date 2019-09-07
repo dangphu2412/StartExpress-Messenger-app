@@ -8,7 +8,7 @@ import debugLib from 'debug';
 import http from 'http';
 import app from '../app';
 
-const debug = debugLib('demo-es6:server');
+const debug = debugLib('messenger:server');
 /**
  * Get port from environment and store in Express.
  */
