@@ -1,3 +1,6 @@
 body.form-membership {
   background: url(/dist/images/bg.png) #fff;
 }
+#login-phone-step2 {
+  display: none;
+}
