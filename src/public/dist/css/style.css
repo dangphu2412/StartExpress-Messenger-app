@@ -4,3 +4,6 @@ body.form-membership {
 #login-phone-step2 {
   display: none;
 }
+.hidden {
+  display: none;
+}

@@ -9,12 +9,17 @@
     "build": "babel ./src --out-dir dist --copy-files"
   },
   "dependencies": {
+    "bcrypt": "^3.0.6",
+    "connect-pg-simple": "^6.0.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
-    "firebase-admin": "^8.5.0",
+    "express-session": "^1.16.2",
+    "firebase-admin": "^8.6.0",
     "http-errors": "~1.6.3",
+    "knex": "^0.19.4",
     "morgan": "~1.9.1",
+    "pg": "^7.12.1",
     "pug": "^2.0.4"
   },
   "devDependencies": {
