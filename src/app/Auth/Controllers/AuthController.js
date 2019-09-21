@@ -6,6 +6,10 @@ class AuthController extends BaseController {
     super();
     this.service = Service.getService();
   }
+
+  registerByEmail(req, res) {
+    return res.render('app/auth/register-email');
+  }
 }
 
 export default AuthController;

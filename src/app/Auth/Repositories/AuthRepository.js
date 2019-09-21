@@ -11,7 +11,7 @@ class AuthRepository extends BaseRepository {
     return this.repository;
   }
 
-  static getTableName() {
+  getTableName() {
     return 'users';
   }
 }
