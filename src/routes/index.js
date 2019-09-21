@@ -1,18 +1,9 @@
 import express from 'express';
+import authRouter from '../app/Auth/Routes/routes';
 
 const router = express.Router();
 
-router.get('/login', (req, res) => res.render('app/login'));
-
-router.route('/login-phone-number')
-  .get((req, res) => res.render('app/login-phone-number'))
-  .post((req, res) => {
-    console.log(req.body);
-  });
-
-router.get('/register', (req, res) => res.render('app/register'));
-
-router.get('/reset-password', (req, res) => res.render('app/reset-password'));
+router.use(authRouter);
 
 router.get('/', (req, res) => res.redirect('/conversations'));
 

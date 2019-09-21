@@ -1,4 +1,4 @@
-extends ../layouts/sign
+extends ../../layouts/sign
 
 block content
   h5 Create account
@@ -12,6 +12,8 @@ block content
       input.form-control(type='email' placeholder='Email' required='')
     .form-group.input-group-lg
       input.form-control(type='password' placeholder='Password' required='')
+    .form-group.input-group-lg
+      #recaptcha-container
     button.btn.btn-primary.btn-lg.btn-block Register
     hr
     p.text-muted Already have an account?

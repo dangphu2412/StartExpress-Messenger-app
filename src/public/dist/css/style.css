@@ -4,3 +4,16 @@ body.form-membership {
 #login-phone-step2 {
   display: none;
 }
+
+.btn-email {
+  background-color: #B23121;
+  color: #fff;
+}
+
+.btn i {
+  margin-right: 10px;
+}
+
+.register-option .btn {
+  margin-bottom: 15px;
+}
