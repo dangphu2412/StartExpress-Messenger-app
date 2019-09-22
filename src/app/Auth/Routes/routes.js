@@ -14,7 +14,7 @@ router.route('/login-phone-number')
 
 router.get('/register', (req, res) => res.render('app/auth/register'));
 
-router.get('/register-email', controller.registerByEmail);
+router.get('/register-email', controller.callMethod('registerByEmail'));
 
 router.get('/reset-password', (req, res) => res.render('app/reset-password'));
 
