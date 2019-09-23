@@ -13,6 +13,8 @@ class AuthService {
     }
     return this.service;
   }
+  
+  
 }
 
 export default AuthService;

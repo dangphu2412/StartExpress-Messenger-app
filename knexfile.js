@@ -6,22 +6,31 @@ const BASE_PATH = path.join(__dirname, 'src', 'database');
 module.exports = {
   development: {
     client: process.env.DB_CONNECTION,
-    connection: process.env.DATABASE_URL,
+    connection: { 
+      host: '127.0.0.1',
+      user: 'postgres', 
+      database: 'mess_app',
+      port: '5432',
+      password: '241299'
+    },
     migrations: {
-      directory: path.join(BASE_PATH, 'migrations'),
+      directory: path.join(__dirname, BASE_PATH, 'migrations'),
     },
     seeds: {
-      directory: path.join(BASE_PATH, 'seeds'),
-    },
-  },
-  production: {
+      directory: path.join(__dirname, BASE_PATH, 'seeds'),
+    }
+  }, 
+  production: { 
     client: process.env.DB_CONNECTION,
-    connection: process.env.DATABASE_URL,
+    connection: { 
+      user: 'postgres', 
+      database: 'mess_app' 
+    },
     migrations: {
-      directory: path.join(BASE_PATH, 'migrations'),
+      directory: path.join(__dirname, BASE_PATH, 'migrations'),
     },
     seeds: {
-      directory: path.join(BASE_PATH, 'seeds'),
+      directory: path.join(__dirname, BASE_PATH, 'seeds'),
     },
     pool: {
       min: parseInt(process.env.DB_POOL_MIN, 10),
@@ -29,3 +38,4 @@ module.exports = {
     },
   },
 };
+
