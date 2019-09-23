@@ -1,0 +1,25 @@
+extends ../layouts/sign
+
+block content
+  div#block-register
+    h5 Create account
+
+    form#register-email
+      .form-group.input-group-lg
+        input.form-control(type='text' name='firstname' placeholder='firstname' required='' autofocus='')
+      .form-group.input-group-lg
+        input.form-control(type='text' name='lastname' placeholder='lastname' required='')
+      .form-group.input-group-lg
+        input.form-control(type='email' name='email' placeholder='email' required='')
+      .form-group.input-group-lg
+        input.form-control(type='password' name='password' placeholder='password' required='')
+      button.btn.btn-primary.btn-lg.btn-block Register
+      hr
+
+  div#verify-email.hidden
+    h5 Verify account
+      h3 Verifying your account by email!
+      hr
+  
+  p.text-muted Already have an account?
+  a.btn.btn-outline-light.btn-sm(href='/login') Sign in!
