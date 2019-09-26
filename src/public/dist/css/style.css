@@ -5,6 +5,10 @@ body.form-membership {
   display: none;
 }
 
+.hidden {
+  display: none;
+} 
+
 .btn-email {
   background-color: #B23121;
   color: #fff;

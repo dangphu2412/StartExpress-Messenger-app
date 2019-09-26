@@ -1,7 +1,7 @@
 const path = require('path');
 require('dotenv').config();
 
-const BASE_PATH = path.join(__dirname, 'src', 'database');
+const BASE_PATH = path.join('src', 'database');
 
 module.exports = {
   development: {
@@ -14,10 +14,10 @@ module.exports = {
       password: '241299'
     },
     migrations: {
-      directory: path.join(__dirname, BASE_PATH, 'migrations'),
+      directory: path.join(BASE_PATH, 'migrations'),
     },
     seeds: {
-      directory: path.join(__dirname, BASE_PATH, 'seeds'),
+      directory: path.join(BASE_PATH, 'seeds'),
     }
   }, 
   production: { 
