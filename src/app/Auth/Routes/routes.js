@@ -15,9 +15,15 @@ router.route('/register-email')
     .get(controller.callMethod('registerByEmail'))
     .post(controller.callMethod('registerByEmailPost'));
 
-router.route('/login')
-    .get(controller.callMethod('login'))
-    .post(controller.callMethod('loginPost'));
+router.route('/login-email')
+    .get(controller.callMethod('loginEmail'))
+    .post(controller.callMethod('loginEmailPost'));
+
+router.route('/login-phone-number')
+    .get(controller.callMethod('loginPhoneNumber'))
+    .post(controller.callMethod('loginPhoneNumberPost'));
+
+router.get('/login', controller.callMethod('login'));
 
 router.get('/reset-password', controller.callMethod('resetPassword'));
 

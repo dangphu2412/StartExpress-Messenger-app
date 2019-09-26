@@ -56,7 +56,7 @@ class AuthService {
     });
     }
 
-  async loginPost(req, res) {
+  async loginEmailPost(req, res) {
     const data = req.body;
     const user = knex('users').select('email');
     if (await user.where({ email: data.email, password: data.password }).first()) {
@@ -67,6 +67,20 @@ class AuthService {
     }
     return res.json({ response: 'die' });
   }
-}
 
+  async loginPhoneNumberPost(req, res) {
+    const data = req.body;
+    admin.auth().verifyIdToken(data.idToken).then(async (decodedToken) => {
+      const { uid } = decodedToken;
+      if (uid) {
+        const userCheck = knex('users').where({ phoneNumber: data.phoneNumber }).first();
+        if (await userCheck) {
+          data.success = true;
+          res.json(data);
+        }
+        return res.json(data);
+      }
+    });
+  }
+}
 export default AuthService;

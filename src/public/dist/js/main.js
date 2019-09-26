@@ -1,26 +1,22 @@
 $(document).ready(function () {
   window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-  $('#login-phone-number').submit(function (event) {
+  $('#register-phone-number').submit(function (event) {
     event.preventDefault();
     const phoneNumber = $('input[name="phoneNumber"]').val();
     const appVerifier = window.recaptchaVerifier;
     firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
       .then(function (confirmationResult) {
         window.confirmationResult = confirmationResult;
-        const firstName = $('input[name="firstName"]').val();
-        const lastName = $('input[name="lastName"]').val();
-        $('#login-phone-step1').remove();
-        $('#login-phone-step2').css('display', 'block');
-        $('#phone-number-verify').submit(function (event) {
+        $('#register-phone-step1').remove();
+        $('#register-phone-step2').css('display', 'block');
+        $('#login-number-verify').submit(function (event) {
           event.preventDefault();
-          const code = $('input[name="code"]').val();
-          confirmationResult.confirm(code).then(function (result) {
+          const codeLoginPhone = $('input[name="codeLoginPhone"]').val();
+          confirmationResult.confirm(codeLoginPhone).then(function (result) {
             firebase.auth().currentUser.getIdToken(true).then(function (idToken) {
               const user = result.user;
               console.log(user);
               const body = {
-                firstName,
-                lastName,
                 phoneNumber,
                 idToken
               }
@@ -88,12 +84,8 @@ $(document).ready(function() {
 
 $(document).ready(function() {
   $('#login-form').submit(function(event) {
-    // function validateEmail($email) {
-    //   const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-    //   return emailReg.test( $email );
-    // }    
     event.preventDefault();
-    const id = $('input[name="email"]').val();
+    const email = $('input[name="email"]').val();
     const password = $('input[name="password"]').val(); 
       const user = firebase.auth().currentUser;
       if (user.emailVerified) {
@@ -124,6 +116,52 @@ $(document).ready(function() {
         $('#alertverifyLogin').css('display','block');
       }
   });
+});
+
+$(document).ready(function () {
+  window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+  $('#login-phone-number').submit(function (event) {
+    event.preventDefault();
+    const phoneNumber = $('input[name="phoneNumber"]').val();
+    const appVerifier = window.recaptchaVerifier;
+    firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+      .then(function (confirmationResult) {
+        window.confirmationResult = confirmationResult;
+        $('#login-phone-step1').remove();
+        $('#login-phone-step2').css('display', 'block');
+        $('#login-phone-step1 ').submit(function (event) {
+          event.preventDefault();
+          const code = $('input[name="code"]').val();
+          confirmationResult.confirm(code).then(function (result) {
+            firebase.auth().currentUser.getIdToken(true).then(function (idToken) {
+              // const user = result.user;
+              // console.log(user);
+              const body = {
+                firstName,
+                lastName,
+                phoneNumber,
+                idToken
+              }
+              console.log(body);
+              $.ajax({
+                type: "POST",
+                url: "/login-phone-number",
+                data: body,
+                success: function(data) {
+                  console.log(data);
+                  if (data.success) {
+                    window.location.href = '/';
+                  }
+                  else {
+                    $('#alertauthenLogin').css('display','block');
+                  }
+                }
+              })
+            })            
+          });
+        })
+    });
+  })
 });
 
 $(document).ready(function() {

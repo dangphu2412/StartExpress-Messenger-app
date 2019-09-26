@@ -28,15 +28,27 @@ class AuthController extends BaseController {
   }
 
   resetPassword(req, res) {
-    res.render('app/reset-password');
+    return res.render('app/reset-password');
   }
 
   login(req, res) {
-    return res.render('app/login');
+    return res.render('app/log/login');
   }
 
-  async loginPost(req, res) {
-    return Service.getService().loginPost(req, res);
+  loginPhoneNumber(req, res) {
+    return res.render('app/log/login-phone-number');
+  }
+
+  async loginPhoneNumberPost(req, res) {
+    return Service.getService().loginPhoneNumberPost(req, res);
+  }
+
+  loginEmail(req, res) {
+    return res.render('app/log/login-email');
+  }
+
+  async loginEmailPost(req, res) {
+    return Service.getService().loginEmailPost(req, res);
   }
 
   logout(req, res) {

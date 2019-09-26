@@ -1,0 +1,13 @@
+extends ../../layouts/sign
+
+block content
+  h5 Register
+
+  .register-option
+    a.btn.btn-email(href='/login-email')
+      i.fa.fa-envelope.social-icon(aria-hidden='true')
+      |  Login with Email
+
+    a.btn.btn-primary(href='/login-phone-number')
+      i.fa.fa-envelope.social-icon(aria-hidden='true')
+      |  Login with Phone Number
