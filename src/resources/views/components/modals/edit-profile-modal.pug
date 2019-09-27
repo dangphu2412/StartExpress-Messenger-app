@@ -19,12 +19,19 @@
             #personal.tab-pane.show.active(role='tabpanel')
               form
                 .form-group
-                  label.col-form-label(for='fullname') Fullname
+                  label.col-form-label(for='firstName') Firstname
                   .input-group
                     .input-group-prepend
                       span.input-group-text
                         i.ti-user
-                    input#fullname.form-control(type='text')
+                    input#firstName.form-control(type='text')
+                .form-group
+                  label.col-form-label(for='lastName') Lastname
+                  .input-group
+                    .input-group-prepend
+                      span.input-group-text
+                        i.ti-user
+                    input#lastName.form-control(type='text')
                 .form-group
                   label.col-form-label Avatar
                   .d-flex.align-items-center
@@ -35,12 +42,19 @@
                       input#customFile.custom-file-input(type='file')
                       label.custom-file-label(for='customFile') Choose file
                 .form-group
+                  label.col-form-label(for='email') Email
+                  .input-group
+                    .input-group-prepend
+                      span.input-group-text
+                        i.ti-map-alt
+                    input#email.form-control(type='email')
+                .form-group
                   label.col-form-label(for='city') City
                   .input-group
                     .input-group-prepend
                       span.input-group-text
                         i.ti-map-alt
-                    input#city.form-control(type='text')
+                    input#city.form-control(type='city')
                 .form-group
                   label.col-form-label(for='phone') Phone
                   .input-group
@@ -48,13 +62,6 @@
                       span.input-group-text
                         i.ti-mobile
                     input#phone.form-control(type='text' placeholder='(555) 555 55 55')
-                .form-group
-                  label.col-form-label(for='website') Website
-                  .input-group
-                    .input-group-prepend
-                      span.input-group-text
-                        i.ti-link
-                    input#website.form-control(type='text')
             #about.tab-pane(role='tabpanel')
               form(action='')
                 .form-group

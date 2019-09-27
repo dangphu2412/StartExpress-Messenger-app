@@ -1,130 +1,171 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyC3v9mPibbjAKwzx7nAAJGz0GGvOS6oga4",
-  authDomain: "messenger-app-13147.firebaseapp.com",
-  databaseURL: "https://messenger-app-13147.firebaseio.com",
-  projectId: "messenger-app-13147",
-  storageBucket: "",
-  messagingSenderId: "889064671267",
-  appId: "1:889064671267:web:5c698c3d471ae6b1a3c996"
-};
-firebase.initializeApp(firebaseConfig);
 $(document).ready(function () {
   window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-  $('#login-phone-number').submit(function (event) {
+  $('#register-phone-number').submit(function (event) {
     event.preventDefault();
-
-    const phone_number = $('input[name="phone_number"]').val();
+    const lastName = $('input[name="lastName"]').val();
+    const firstName = $('input[name="firstName"]').val();
+    const phoneNumber = $('input[name="phoneNumber"]').val();
     const appVerifier = window.recaptchaVerifier;
-    firebase.auth().signInWithPhoneNumber(phone_number, appVerifier)
+    firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
       .then(function (confirmationResult) {
         window.confirmationResult = confirmationResult;
-        const firstname = $('input[name="firstname"]').val();
-        const lastname = $('input[name="lastname"]').val();
-        $('#login-phone-step1').remove();
-        $('#login-phone-step2').css('display', 'block');
-        $('#phone-number-verify').submit(function (event) {
+        $('#register-phone-step1').remove();
+        $('#register-phone-step2').css('display', 'block');
+        $('#register-number-verify').submit(function (event) {
           event.preventDefault();
           const code = $('input[name="code"]').val();
           confirmationResult.confirm(code).then(function (result) {
-            const user = result.user;
-            const body = {
-              firstname,
-              lastname,
-              phone_number,
-              forceRefresh: user.refreshToken
-            }
-            $.ajax({
-              type: "POST",
-              url: "/phone-register",
-              data: body,
-              success: function(data) {
-                console.log(data);
-                if (data) {
-                  $('#alert').css('display','block');
-                }
-                else {
-                  window.location.href = '/';
-                }
+            firebase.auth().currentUser.getIdToken(true).then(function (idToken) {
+              const user = result.user;
+              console.log(user);
+              const body = {
+                lastName,
+                firstName,
+                phoneNumber,
+                idToken
               }
-            })
-
-          }).catch(function (error) {
-            console.log('error2', error);
+              console.log(body);
+              $.ajax({
+                type: "POST",
+                url: "/register-phone-number",
+                data: body,
+                success: function(data) {
+                  if (data.success) {
+                    window.location.href = '/login-phone-number';
+                  }
+                  else {
+                    $('#alert').css('display','block');
+                  }
+                }
+              })
+            })            
           });
         });
-      }).catch(function (error) {
-        console.log('error', error);
       });
-  });
+  })
 });
 
 $(document).ready(function() {
-  const actionCodeSettings = {
-    url: 'https://messenger-app-13147.firebaseapp.com/__/auth/action?mode=<action>&oobCode=<code>',
-    handleCodeInApp: true,
-  }
   $('#register-email').submit(function(event) {
     event.preventDefault();
-    const firstname = $('input[name="firstname"]').val();
-    const lastname = $('input[name="lastname"]').val();
+    const firstName = $('input[name="firstName"]').val();
+    const lastName = $('input[name="lastName"]').val();
     const email = $('input[name="email"]').val();
     const password = $('input[name="password"]').val();
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .then(function(){
         const user = firebase.auth().currentUser;
-        user.sendEmailVerification()
-        $('#block-register').remove();
-        $('#verify-email').css('display','block');
+        user.sendEmailVerification();
         window.localStorage.setItem('emailForSignIn', email);
         const body = {
-          firstname,
-          lastname,
+          firstName,
+          lastName,
           email,
           password,
         }
-        $.post('/register', body);
+        $.ajax({
+          type: 'POST',
+          url: '/register-email',
+          data: body,
+          success: function (data) {            
+            if (data.success) {
+              $('#block-register').remove();
+              $('#verify-email').css('display','block');
+            }
+            else {
+              window.location.href = '/register-email';
+            }
+          }
+        })
       })  
     .catch(function(error) {
-      console.log(error + "got raped");
+      event.preventDefault();
+      $('#alertRegister').css('display','block');
     });
   });
 });
 
 $(document).ready(function() {
-  $('#login-form').submit(function(event) {    
+  $('#login-form').submit(function(event) {
     event.preventDefault();
     const email = $('input[name="email"]').val();
-    const password = $('input[name="password"]').val();    
-    const user = firebase.auth().currentUser;
-    if (user.emailVerified) {
-      console.log(user);
-        const body = {
-          email,
-          password
-        }
-        $.ajax({
-          type: 'POST',
-          url: '/authenEmail',
-          data: body,
-          success: function (data) {            
-            if (data.href) {
-              window.location.href = `${data.href}`;
-            }
-            else {
-              event.preventDefault();
-              $('#alertLogin').css('display','block');
-            }
+    const password = $('input[name="password"]').val(); 
+      const user = firebase.auth().currentUser;
+      if (user.emailVerified) {
+        console.log(user);
+          const body = {
+            email,
+            password
           }
-        })
-    } 
-    else {
-      console.log(user.emailVerified);
-      
-      event.preventDefault();
-      $('#alertverifyLogin').css('display','block');
-    }
+          $.ajax({
+            type: 'POST',
+            url: '/login-email',
+            data: body,
+            success: function (data) {            
+              if (data.href) {
+                window.location.href = `${data.href}`;
+              }
+              else {
+                event.preventDefault();
+                $('#alertLogin').css('display','block');
+              }
+            }
+          })
+      } 
+      else {
+        console.log(user.emailVerified);
+        
+        event.preventDefault();
+        $('#alertverifyLogin').css('display','block');
+      }
   });
 });
+
+  $(document).ready(function () {
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+    $('#login-phone-number').submit(function (event) {
+      event.preventDefault();
+      const phoneNumber = $('input[name="phoneNumber"]').val();
+      const appVerifier = window.recaptchaVerifier;
+      firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+        .then(function (confirmationResult) {
+          window.confirmationResult = confirmationResult;
+          $('#login-phone-step1').remove();
+          $('#login-phone-step2').css('display', 'block');
+          $('#login-number-verify').submit(function (event) {
+            event.preventDefault();
+            const codeLoginPhone = $('input[name="codeLoginPhone"]').val();          
+            confirmationResult.confirm(codeLoginPhone).then(function (result) {
+              firebase.auth().currentUser.getIdToken(true).then(function (idToken) {
+                console.log(idToken);
+                const body = {
+                  phoneNumber,
+                  idToken
+                }
+                console.log(body);
+                $.ajax({
+                  type: "POST",
+                  url: "/login-phone-number",
+                  data: body,
+                  success: function(data) {
+                    console.log(data);
+                    if (data.success) {
+                      window.location.href = '/';
+                    }
+                    else {
+                      $('#alertauthenLogin').css('display','block');
+                    }
+                  }
+                })
+              })            
+            }).catch((error) => {
+              window.location.reload();
+              console.log(error);
+            });
+          })
+      });
+    })
+  });
 
 $(document).ready(function() {
     $("#logout").submit(function(event) {
@@ -138,3 +179,23 @@ $(document).ready(function() {
       })
     })
 });
+
+$(document).ready(function() {
+  $("#addFriend").submit(function(event) {
+    event.preventDefault();
+    const name = $('input[name="email"]').val();
+    $.ajax({
+      type: "POST",
+      url: "/add-friend",
+      data: email,
+      success: function(data) {
+        if (data.sended) {
+          $('#success').css('display','block');
+        }
+        else {
+          $('#alert').css('display','block');
+        }
+      }
+    })
+  })
+})

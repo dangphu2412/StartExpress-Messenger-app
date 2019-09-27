@@ -1,23 +1,23 @@
-extends ../layouts/sign
+extends ../../layouts/sign
 
 block content
-  div#login-phone-step1
-    h5 Login with phone number
+  div#register-phone-step1
+    h5 Register with phone number
 
-    form#login-phone-number(method='POST')
+    form#register-phone-number(method='POST')
       .form-group.input-group-lg
-        input.form-control(type='text' name='firstname' placeholder='Firstname' required='' autofocus='')
+        input.form-control(type='text' name='firstName' placeholder='Firstname' required='' autofocus='')
       .form-group.input-group-lg
-        input.form-control(type='text' name='lastname' placeholder='Lastname' required='')
+        input.form-control(type='text' name='lastName' placeholder='Lastname' required='')
       .form-group.input-group-lg
-        input.form-control(type='text' name='phone_number' placeholder='Phone number' required='' autofocus='')
+        input.form-control(type='text' name='phoneNumber' placeholder='Phone number' required='' autofocus='')
         #recaptcha-container
-      button.btn.btn-primary.btn-lg.btn-block(type='submit') Sign in
+      button.btn.btn-primary.btn-lg.btn-block(type='submit') Register !
 
-  div#login-phone-step2.hidden
+  div#register-phone-step2.hidden
     h5 Verify code
 
-    form#phone-number-verify(method='POST')
+    form#register-number-verify(method='POST')
       .form-group.input-group-lg
         input.form-control(type='text' name='code' placeholder='Code' required='' autofocus='')
         p#alert.hidden Your code is fault
@@ -49,4 +49,4 @@ block content
         i.fa.fa-instagram
   hr
   p.text-muted Don&apos;t have an account?
-  a.btn.btn-outline-light.btn-sm(href='/register') Register now!
+  a.btn.btn-outline-light.btn-sm(href='/login') Login now!

@@ -1,24 +1,32 @@
 import express from 'express';
 import Controller from '../Controllers/AuthController';
+import authenUser from '../Middleware/AuthMiddleware';
 
 const router = express.Router();
 const controller = new Controller();
 
-router.route('/login')
-    .get(controller.callMethod('login'))
-    .post(controller.callMethod('loginPost'));
+router.route('/register')
+    .get(authenUser.verifyNotAuth, controller.callMethod('register'));
+
+router.route('/register-phone-number')
+    .get(authenUser.verifyNotAuth, controller.callMethod('registerByPhoneNumber'))
+    .post(authenUser.verifyNotAuth, controller.callMethod('registerByPhoneNumberPost'));
+
+router.route('/register-email')
+    .get(authenUser.verifyNotAuth, controller.callMethod('registerByEmail'))
+    .post(authenUser.verifyNotAuth, controller.callMethod('registerByEmailPost'));
+
+router.route('/login-email')
+    .get(authenUser.verifyNotAuth, controller.callMethod('loginEmail'))
+    .post(authenUser.verifyNotAuth, controller.callMethod('loginEmailPost'));
 
 router.route('/login-phone-number')
-    .get(controller.callMethod('loginPhoneNumber'))
-    .post(controller.callMethod('loginPhoneNumberPost'));
+    .get(authenUser.verifyNotAuth, controller.callMethod('loginPhoneNumber'))
+    .post(authenUser.verifyNotAuth, controller.callMethod('loginPhoneNumberPost'));
 
-router.route('/register') 
-    .get(controller.callMethod('register'))
-    .post(controller.callMethod('registerPost'));
+router.get('/login', authenUser.verifyNotAuth, controller.callMethod('login'));
 
-router.get('/register-email', controller.callMethod('registerByEmail'));
-
-router.post('/authenEmail', controller.callMethod('authenEmail'));
+router.post('/add-friend', controller.callMethod('addFriend'));
 
 router.get('/reset-password', controller.callMethod('resetPassword'));
 

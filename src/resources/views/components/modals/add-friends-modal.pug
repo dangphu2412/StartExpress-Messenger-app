@@ -9,12 +9,14 @@
             i.ti-close
         .modal-body
           .alert.alert-info Send invitations to friends.
-          form
+          form(method="POST")#addFriend
             .form-group
-              label.col-form-label(for='emails') Email addresses
-              input#emails.form-control(type='text')
+              label.col-form-label(for='email') Email addresses
+              input#email.form-control(type='email' name='email')
             .form-group
               label.col-form-label(for='message') Invitation message
               textarea#message.form-control
-        .modal-footer
-          button.btn.btn-primary(type='button') Submit
+            #success Friend request sended  
+            #alert Cannot add friend  
+            button.btn.btn-primary(type='submit') Submit
+            
