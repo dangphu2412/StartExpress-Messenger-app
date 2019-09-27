@@ -1,7 +1,7 @@
 import admin from 'firebase-admin';
 import BaseController from '../../../infrastructure/Controllers/BaseController';
 import Service from '../Services/AuthService';
-import Knex from 'knex';
+import knex from '../../../database/connection';
 
 admin.initializeApp({
   credential: admin.credential.cert(process.env.FIREBASE_CERT),
@@ -105,16 +105,26 @@ class AuthController extends BaseController {
     const data = req.body;
     const userCheck = await this.service.checkUserEmail(data);
     data.friendId = userCheck.id;
-    const friendCheck = await this.service.checkFriend(user, data);
-    if (userCheck && !friendCheck) {
-      await Knex('friends').insert({
-        userId: user.id,
-        friendId: data.friendId,
-        received: 'false',
-        status: 'unknown',
-      });
-      data.sent = 'sent';
-      return res.json(data);
+    const friendCheck = await knex('friends').where({
+      userId: user.id,
+      friendId: data.friendId,
+    })
+    .orWhere({
+      userId: data.friendId,
+      friendId: user.id,
+    })
+    .first();
+    if (userCheck) {
+      if (!friendCheck) {
+        await knex('friends').insert({
+          userId: user.id,
+          friendId: data.friendId,
+          received: '0',
+          status: '0',
+        });
+        data.sent = 'sent';
+        return res.json(data);
+      }
     }
     return res.json();
   }
