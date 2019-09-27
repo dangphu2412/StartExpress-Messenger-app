@@ -1,8 +1,4 @@
-import admin from 'firebase-admin';
 import Repository from '../Repositories/AuthRepository';
-import knex from '../../../database/connection';
-
-
 
 class AuthService {
   static service;
@@ -18,16 +14,20 @@ class AuthService {
     return this.service;
   }
 
-  registerEmailCheck(data) {
+  checkUserEmail(data) {
     return this.repository.checkUserEmail(data);
+  }
+
+  checkUserPhone(data) {
+    return this.repository.checkUserPhone(data);
+  }
+
+  checkFriend(user, data) {
+    return this.repository.checkFriend(user, data);
   }
 
   registerByEmailPost(data) {
     return this.repository.registerUserEmail(data);
-  }
-
-  registerPhoneCheck(data) {
-    return this.repository.checkUserPhone(data);
   }
 
   registerByPhoneNumberPost(data) {
@@ -37,9 +37,6 @@ class AuthService {
   loginEmailCheck(data) {
     return this.repository.loginEmailCheck(data);
   }
-
-  async loginPhoneNumberPost(req, res) {
-    
-  }
 }
+
 export default AuthService;
