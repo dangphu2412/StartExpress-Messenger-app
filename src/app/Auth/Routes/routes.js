@@ -26,8 +26,6 @@ router.route('/login-phone-number')
 
 router.get('/login', authenUser.verifyNotAuth, controller.callMethod('login'));
 
-router.post('/add-friend', controller.callMethod('addFriend'));
-
 router.get('/reset-password', controller.callMethod('resetPassword'));
 
 router.get('/logout', controller.callMethod('logout'));

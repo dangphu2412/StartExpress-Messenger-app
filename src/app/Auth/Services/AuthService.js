@@ -1,17 +1,17 @@
 import Repository from '../Repositories/AuthRepository';
 
 class AuthService {
-  static service;
+  static authService;
 
   constructor() {
     this.repository = Repository.getRepository();
   }
 
   static getService() {
-    if (!this.service) {
-      this.service = new this();
+    if (!this.authService) {
+      this.authService = new this();
     }
-    return this.service;
+    return this.authService;
   }
 
   checkUserEmail(data) {
@@ -20,10 +20,6 @@ class AuthService {
 
   checkUserPhone(data) {
     return this.repository.checkUserPhone(data);
-  }
-
-  checkFriend(user, data) {
-    return this.repository.checkFriend(user, data);
   }
 
   registerByEmailPost(data) {

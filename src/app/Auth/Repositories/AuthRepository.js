@@ -1,5 +1,4 @@
 import BaseRepository from '../../../infrastructure/Repositories/BaseRepository';
-import knex from '../../../database/connection';
 
 class AuthRepository extends BaseRepository {
   static repository;
@@ -26,19 +25,6 @@ class AuthRepository extends BaseRepository {
     return this.getBy({
       phoneNumber: data.phoneNumber,
     });
-  }
-
-  checkFriend(user, data) {
-    const queryOr = knex('friends').where({
-      userId: user.id,
-      friendId: data.friendId,
-    })
-    .orWhere({
-      userId: data.friendId,
-      friendId: user.id,
-    })
-    .first();
-    return queryOr;
   }
 
   registerUserEmail(data) {

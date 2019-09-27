@@ -1,17 +1,11 @@
 import admin from 'firebase-admin';
 import BaseController from '../../../infrastructure/Controllers/BaseController';
-import Service from '../Services/AuthService';
-import knex from '../../../database/connection';
-
-admin.initializeApp({
-  credential: admin.credential.cert(process.env.FIREBASE_CERT),
-  databaseURL: 'https://<FIREBASE_PROJECT_ID>.firebaseio.com',
-});
+import AuthService from '../Services/AuthService';
 
 class AuthController extends BaseController {
   constructor() {
     super();
-    this.service = Service.getService();
+    this.authService = AuthService.getService();
   }
 
   register(req, res) {
@@ -24,11 +18,11 @@ class AuthController extends BaseController {
 
   async registerByEmailPost(req, res) {
     const data = req.body;
-    const userCheck = await this.service.checkUserEmail(data);
+    const userCheck = await this.authService.checkUserEmail(data);
     if (await userCheck) {
       return res.json();
     }
-    await this.service.registerByEmailPost(data);
+    await this.authService.registerByEmailPost(data);
     data.success = true;
     return res.json(data);
   }
@@ -42,11 +36,11 @@ class AuthController extends BaseController {
     admin.auth().verifyIdToken(data.idToken).then(async (decodedToken) => {
       const { uid } = decodedToken;
       if (uid) {
-        const userCheck = this.service.checkUserPhone(data);
+        const userCheck = this.authService.checkUserPhone(data);
         if (await userCheck) {
             res.json(data);
         }
-        await this.service.registerByPhoneNumber(data);
+        await this.authService.registerByPhoneNumber(data);
         data.success = true;
         return res.json(data);
       }
@@ -70,7 +64,7 @@ class AuthController extends BaseController {
 
   async loginEmailPost(req, res) {
     const data = req.body;
-    const user = await this.service.loginEmailCheck(data);
+    const user = await this.authService.loginEmailCheck(data);
     if (user) {
         req.session.user = user;
         req.session.save();
@@ -89,7 +83,7 @@ class AuthController extends BaseController {
     admin.auth().verifyIdToken(data.idToken).then(async (decodedToken) => {
       const { uid } = decodedToken;
       if (uid) {
-        const userCheck = this.service.registerPhoneCheck;
+        const userCheck = this.authService.registerPhoneCheck;
         if (await userCheck) {
           req.session.user = data.phoneNumber;
           data.success = true;
@@ -98,35 +92,6 @@ class AuthController extends BaseController {
         return res.json(data);
       }
     });
-  }
-
-  async addFriend(req, res) {
-    const { user } = req.session;
-    const data = req.body;
-    const userCheck = await this.service.checkUserEmail(data);
-    data.friendId = userCheck.id;
-    const friendCheck = await knex('friends').where({
-      userId: user.id,
-      friendId: data.friendId,
-    })
-    .orWhere({
-      userId: data.friendId,
-      friendId: user.id,
-    })
-    .first();
-    if (userCheck) {
-      if (!friendCheck) {
-        await knex('friends').insert({
-          userId: user.id,
-          friendId: data.friendId,
-          received: '0',
-          status: '0',
-        });
-        data.sent = 'sent';
-        return res.json(data);
-      }
-    }
-    return res.json();
   }
 
   logout(req, res) {
