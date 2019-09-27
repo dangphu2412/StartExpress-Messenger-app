@@ -1,6 +1,6 @@
 import Repository from '../Repositories/FriendRepository';
 
-class AuthService {
+class FriendService {
   static friendService;
 
   constructor() {
@@ -27,4 +27,4 @@ class AuthService {
   }
 }
 
-export default AuthService;
+export default FriendService;
