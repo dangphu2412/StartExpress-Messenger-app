@@ -12,7 +12,7 @@ router.use(friendRouter);
 
 router.get('/', authenUser.verifyAuth, (req, res) => res.redirect('/conversations'));
 
-
-router.use(conversationRouter);
+router.get('/conversations', (req, res) => res.render('app/conversation/index'));
+// router.use(conversationRouter);
 
 export default router;

@@ -1,6 +1,6 @@
 import BaseRepository from '../../../infrastructure/Repositories/BaseRepository';
 
-class FriendRepository extends BaseRepository {
+class ConversationRepository extends BaseRepository {
     static repository;
 
     static getRepository() {
@@ -11,29 +11,8 @@ class FriendRepository extends BaseRepository {
     }
 
     getTableName() {
-        return 'friends';
-    }
-
-    checkFriend(user, data) {
-        return this.getByAnother(
-        {
-            userId: user.id,
-            friendId: data.friendId
-        },
-        {
-            userId: data.friendId,
-            friendId: user.id,
-        });
-    }
-
-    createFriend(user, data) {
-        return this.create({
-            userId: user.id,
-            friendId: data.friendId,
-            received: data.friendId,
-            status: '0',
-        });
+        return 'users';
     }
 }
 
-export default FriendRepository;
+export default ConversationRepository;

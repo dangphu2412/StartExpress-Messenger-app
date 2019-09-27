@@ -1,7 +1,7 @@
-import Repository from '../Repositories/FriendRepository';
+import Repository from '../Repositories/ConversationRepository';
 
 class AuthService {
-  static friendService;
+  static conversationService;
 
   constructor() {
     this.repository = Repository.getRepository();
@@ -12,18 +12,6 @@ class AuthService {
       this.friendService = new this();
     }
     return this.friendService;
-  }
-
-  checkUserEmail(data) {
-    return this.repository.checkUserEmail(data);
-  }
-  
-  checkFriend(user, data) {
-    return this.repository.checkFriend(user, data);
-  }
-
-  createFriend(user, data) {
-    return this.repository.createFriend(user, data);
   }
 }
 
