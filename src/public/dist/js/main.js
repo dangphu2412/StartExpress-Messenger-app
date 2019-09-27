@@ -90,6 +90,7 @@ $(document).ready(function() {
     event.preventDefault();
     const email = $('input[name="email"]').val();
     const password = $('input[name="password"]').val(); 
+    firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
       const user = firebase.auth().currentUser;
       if (user.emailVerified) {
         console.log(user);
@@ -118,6 +119,7 @@ $(document).ready(function() {
         event.preventDefault();
         $('#alertverifyLogin').css('display','block');
       }
+    });
   });
 });
 
@@ -168,10 +170,9 @@ $(document).ready(function() {
   });
 
 $(document).ready(function() {
-    $("#logout").submit(function(event) {
-      console.log('got die');
-      
+    $('#logout').click(function(event) {      
       event.preventDefault();
+      console.log('got die');
       firebase.auth().signOut().then(function() {
         window.location.href = '/logout'
       }).catch((error) => {
@@ -183,13 +184,17 @@ $(document).ready(function() {
 $(document).ready(function() {
   $("#addFriend").submit(function(event) {
     event.preventDefault();
-    const name = $('input[name="email"]').val();
+    const email = $('input[name="email"]').val();
+    const body = {
+      email
+    }
     $.ajax({
       type: "POST",
       url: "/add-friend",
-      data: email,
+      data: body,
       success: function(data) {
-        if (data.sended) {
+        if (data.sent) {
+          console.log('hello');
           $('#success').css('display','block');
         }
         else {

@@ -1,4 +1,5 @@
 import BaseRepository from '../../../infrastructure/Repositories/BaseRepository';
+import knex from '../../../database/connection';
 
 class AuthRepository extends BaseRepository {
   static repository;
@@ -27,15 +28,41 @@ class AuthRepository extends BaseRepository {
     });
   }
 
+  checkFriend(user, data) {
+    const queryOr = knex('friends').where({
+      userId: user.id,
+      friendId: data.friendId,
+    })
+    .orWhere({
+      userId: data.friendId,
+      friendId: user.id,
+    })
+    .first();
+    return queryOr;
+  }
+
   registerUserEmail(data) {
-    return this.create(data);
+    return this.create({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      password: data.password,
+      avatar: 'unknown',
+      phoneNumber: 'unknown',
+      city: 'unknown',
+      describe: 'unknown',
+    });
   }
 
   registerPhoneNumber(data) {
     return this.create({
       firstName: data.firstName,
       lastName: data.lastName,
+      email: 'unknown',
       phoneNumber: data.phoneNumber,
+      avatar: 'unknown',
+      city: 'unknown',
+      describe: 'unknown',
     });
   }
 
@@ -43,7 +70,7 @@ class AuthRepository extends BaseRepository {
     return this.getBy({
       email: data.email,
       password: data.password,
-    })
+    });
   }
 }
 

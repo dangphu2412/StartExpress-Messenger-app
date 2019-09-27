@@ -1,6 +1,7 @@
 import admin from 'firebase-admin';
 import BaseController from '../../../infrastructure/Controllers/BaseController';
 import Service from '../Services/AuthService';
+import Knex from 'knex';
 
 admin.initializeApp({
   credential: admin.credential.cert(process.env.FIREBASE_CERT),
@@ -23,7 +24,7 @@ class AuthController extends BaseController {
 
   async registerByEmailPost(req, res) {
     const data = req.body;
-    const userCheck = await this.service.registerEmailCheck(data);
+    const userCheck = await this.service.checkUserEmail(data);
     if (await userCheck) {
       return res.json();
     }
@@ -41,7 +42,7 @@ class AuthController extends BaseController {
     admin.auth().verifyIdToken(data.idToken).then(async (decodedToken) => {
       const { uid } = decodedToken;
       if (uid) {
-        const userCheck = this.service.registerPhoneCheck(data);
+        const userCheck = this.service.checkUserPhone(data);
         if (await userCheck) {
             res.json(data);
         }
@@ -69,9 +70,9 @@ class AuthController extends BaseController {
 
   async loginEmailPost(req, res) {
     const data = req.body;
-    const user = this.service.loginEmailCheck(data);
-    if (await user) {
-        req.session.user = data;
+    const user = await this.service.loginEmailCheck(data);
+    if (user) {
+        req.session.user = user;
         req.session.save();
         data.href = '/';
         return res.json(data);
@@ -100,7 +101,22 @@ class AuthController extends BaseController {
   }
 
   async addFriend(req, res) {
-    
+    const { user } = req.session;
+    const data = req.body;
+    const userCheck = await this.service.checkUserEmail(data);
+    data.friendId = userCheck.id;
+    const friendCheck = await this.service.checkFriend(user, data);
+    if (userCheck && !friendCheck) {
+      await Knex('friends').insert({
+        userId: user.id,
+        friendId: data.friendId,
+        received: 'false',
+        status: 'unknown',
+      });
+      data.sent = 'sent';
+      return res.json(data);
+    }
+    return res.json();
   }
 
   logout(req, res) {

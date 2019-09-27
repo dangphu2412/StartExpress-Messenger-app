@@ -29,6 +29,10 @@ class BaseRepository {
     return this.cloneQuery().where(clauses).select(columns).first();
   }
 
+  // getByAnother(clauses = {}, orClauses = {}, columns = ['*']) {
+  //   return this.cloneQuery().where(clauses).orWhere(orClauses).select(columns).first();
+  // }
+
   create(attributes, trx, returning = ['*']) {
     return this.cloneQuery().insert(attributes).returning(returning);
   }

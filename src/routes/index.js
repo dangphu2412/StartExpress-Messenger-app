@@ -8,6 +8,9 @@ router.use(authRouter);
 
 router.get('/', authenUser.verifyAuth, (req, res) => res.redirect('/conversations'));
 
-router.get('/conversations', authenUser.verifyAuth, (req, res) => res.render('app/conversation/index'));
+router.get('/conversations', (req, res) => {
+    const session = req.session.user;
+    res.render('app/conversation/index', { session });
+});
 
 export default router;
