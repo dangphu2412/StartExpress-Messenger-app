@@ -9,7 +9,6 @@ block content
       .form-group.input-group-lg
         input.form-control(type='text' name='phoneNumber' placeholder='Phone number' required='' autofocus='')
       #recaptcha-container
-      .hidden(style='color:red')#alertauthenLogin Your phone number has not created yet !
       .form-group.d-flex.justify-content-between
         .custom-control.custom-checkbox
           input#customCheck1.custom-control-input(type='checkbox' checked='')
@@ -21,7 +20,8 @@ block content
   #login-phone-step2.hidden
     form#login-number-verify(method='POST')
       .form-group.input-group-lg
-        input.form-control(type='text' name='code' placeholder='Code' required='' autofocus='')
+        input.form-control(type='text' name='codeLoginPhone' placeholder='Code' required='' autofocus='')
+        .hidden(style='color:red')#alertauthenLogin Your phone number has not created yet !
         .hidden(style='color:red')#alertverifyLogin Your code is wrong !
       button.btn.btn-primary.btn-lg.btn-block(type='submit') Verify
   div  
