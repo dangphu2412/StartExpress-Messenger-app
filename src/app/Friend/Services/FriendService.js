@@ -17,13 +17,29 @@ class FriendService {
   checkUserEmail(data) {
     return this.repository.checkUserEmail(data);
   }
-  
+
   checkFriend(user, data) {
     return this.repository.checkFriend(user, data);
   }
 
-  createFriend(user, data) {
-    return this.repository.createFriend(user, data);
+  createFriendReq(user, data) {
+    return this.repository.createFriendReq(user, data);
+  }
+
+  createFriendRes(user, data) {
+    return this.repository.createFriendRes(user, data);
+  }
+
+  acceptFriendReq(user, data) {
+    return this.repository.acceptFriendReq(user, data);
+  }
+
+  acceptFriendRes(user, data) {
+    return this.repository.acceptFriendRes(user, data);
+  }
+
+  friendList(user) {
+    return this.repository.friendList(user);
   }
 }
 

@@ -1,4 +1,3 @@
-import admin from 'firebase-admin';
 import BaseController from '../../../infrastructure/Controllers/BaseController';
 import AuthService from '../Services/AuthService';
 

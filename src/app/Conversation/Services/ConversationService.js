@@ -1,6 +1,6 @@
 import Repository from '../Repositories/ConversationRepository';
 
-class AuthService {
+class ConversationService {
   static conversationService;
 
   constructor() {
@@ -8,11 +8,11 @@ class AuthService {
   }
 
   static getService() {
-    if (!this.friendService) {
-      this.friendService = new this();
+    if (!this.conversationService) {
+      this.conversationService = new this();
     }
-    return this.friendService;
+    return this.conversationService;
   }
 }
 
-export default AuthService;
+export default ConversationService;
