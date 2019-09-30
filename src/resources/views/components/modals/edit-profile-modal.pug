@@ -17,14 +17,14 @@
               a.nav-link(data-toggle='tab' href='#social-links' role='tab' aria-controls='social-links' aria-selected='false') Social Links
           .tab-content
             #personal.tab-pane.show.active(role='tabpanel')
-              form
+              form#personelForm
                 .form-group
                   label.col-form-label(for='firstName') Firstname
                   .input-group
                     .input-group-prepend
                       span.input-group-text
                         i.ti-user
-                    input#firstName.form-control(type='text')
+                    input#firstName.form-control(type='text' name='firstName')
                 .form-group
                   label.col-form-label(for='lastName') Lastname
                   .input-group
@@ -32,6 +32,13 @@
                       span.input-group-text
                         i.ti-user
                     input#lastName.form-control(type='text')
+                .form-group
+                  label.col-form-label(for='password') Password
+                  .input-group
+                    .input-group-prepend
+                      span.input-group-text
+                        i.ti-user
+                    input#password.form-control(type='password' name='password')
                 .form-group
                   label.col-form-label Avatar
                   .d-flex.align-items-center
@@ -47,21 +54,21 @@
                     .input-group-prepend
                       span.input-group-text
                         i.ti-map-alt
-                    input#email.form-control(type='email')
+                    input.form-control(type='email' name='email')
                 .form-group
                   label.col-form-label(for='city') City
                   .input-group
                     .input-group-prepend
                       span.input-group-text
                         i.ti-map-alt
-                    input#city.form-control(type='city')
+                    input#city.form-control(type='city' name='city')
                 .form-group
                   label.col-form-label(for='phone') Phone
                   .input-group
                     .input-group-prepend
                       span.input-group-text
                         i.ti-mobile
-                    input#phone.form-control(type='text' placeholder='(555) 555 55 55')
+                    input#phone.form-control(type='text' placeholder='(555) 555 55 55' name='phoneNumber')
             #about.tab-pane(role='tabpanel')
               form(action='')
                 .form-group

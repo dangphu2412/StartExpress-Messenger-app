@@ -204,3 +204,48 @@ $(document).ready(function() {
     })
   })
 })
+
+$(document).ready(function() {
+  $('#AcceptReq').click(function(event) {
+    event.preventDefault();
+    const friendId = $('#AcceptReq').attr('data-id');
+    alert(friendId);
+    
+    $.ajax({
+      type: "POST",
+      url: "/accept-friend",
+      data: { friendId },
+      success: function() {
+          window.location.reload();
+      }
+    })
+  })
+})
+
+$(document).ready(function() {
+  $('#customFile').change(function(e){
+    e.stopPropagation();
+    e.preventDefault();
+    const reader = new FileReader();
+    const file = e.target.files[0];
+    reader.onload = function(progressEvent) {
+      const url = reader.result;
+      const fd = new FormData();
+      fd.append('avatar',url);
+        $.ajax({
+          type: "POST",
+          data: fd,
+          url: "/upload-profile-image",
+          processData: false,
+          enctype: "multipart/form-data",
+          contenType: false,
+          success: function(data) {
+            console.log('hello');
+            }
+          })
+    }
+    reader.readAsDataURL(file);
+    // $('#personelForm').submit(function(event) {
+    //   event.preventDefault();
+  });
+})

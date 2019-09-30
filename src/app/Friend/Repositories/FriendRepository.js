@@ -18,7 +18,7 @@ class FriendRepository extends BaseRepository {
         return this.getByAnother(
         {
             userId: user.id,
-            friendId: data.friendId
+            friendId: data.friendId,
         },
         {
             userId: data.friendId,
@@ -26,12 +26,47 @@ class FriendRepository extends BaseRepository {
         });
     }
 
-    createFriend(user, data) {
+    createFriendReq(user, data) {
         return this.create({
             userId: user.id,
             friendId: data.friendId,
             received: data.friendId,
             status: '0',
+        });
+    }
+
+    createFriendRes(user, data) {
+        return this.create({
+            userId: data.friendId,
+            friendId: user.id,
+            received: data.friendId,
+            status: '0',
+        });
+    }
+
+    friendList(user) {
+        return this.listBy({
+            friendId: user.id,
+            received: user.id,
+        });
+    }
+
+    acceptFriendReq(user, data) {
+        return this.update({
+            userId: data.friendId,
+            received: user.id,
+        },
+        {
+            status: '1',
+        });
+    }
+
+    acceptFriendRes(user, data) {
+        return this.update({
+            received: user.id,
+            friendId: data.friendId,
+        }, {
+            status: '1',
         });
     }
 }

@@ -11,8 +11,22 @@ class ConversationController extends BaseController {
     this.authService = AuthService.getService();
   }
 
-  conversation(req, res) {
-    return res.render('app/conversation/index');
+  redirectCoreView(req, res) {
+    return res.redirect('/conversations');
+  }
+
+  async conversation(req, res) {
+    const { user } = req.session;
+    const friendList = await this.friendService.friendList(user);
+    const friendInfor = await this.authService.friendInfor();
+    return res.render('app/conversation/index', { friendList, friendInfor });
+  }
+
+  uploadImgProfile(req, res) {
+    const { file } = req;
+    console.log(file);
+    // console.log(req.body);
+    return res.json(file);
   }
 }
 

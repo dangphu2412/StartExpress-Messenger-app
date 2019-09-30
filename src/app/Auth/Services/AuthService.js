@@ -33,6 +33,10 @@ class AuthService {
   loginEmailCheck(data) {
     return this.repository.loginEmailCheck(data);
   }
+
+  friendInfor() {
+    return this.repository.friendInfor();
+  }
 }
 
 export default AuthService;

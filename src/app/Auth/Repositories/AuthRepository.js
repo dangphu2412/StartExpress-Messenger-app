@@ -58,6 +58,10 @@ class AuthRepository extends BaseRepository {
       password: data.password,
     });
   }
+
+  friendInfor(friendId) {
+    return this.list();
+  }
 }
 
 export default AuthRepository;
