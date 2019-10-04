@@ -10,6 +10,17 @@ import 'dotenv/config';
 import initRoutes from './config/routes';
 
 const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+
+io.on('connection', (socket) => {
+  socket.on('join', (data) => {
+    console.log(data);
+  });
+  socket.on('messages', (data) => {
+    socket.emit('sendMess', data);
+  });
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'resources/views'));
@@ -52,4 +63,5 @@ app.use((err, req, res) => {
   res.render('error');
 });
 
-export default app;
+// export default app;
+server.listen(4200);

@@ -7,17 +7,16 @@ import authenUser from '../../Auth/Middleware/AuthMiddleware';
 const router = express.Router();
 const controller = new Controller();
 
-const upload = multer({ dest: 'uploads/upload/' });
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, '../../../uploads/upload');
-//     },
-//     filename: (req, file, cb) => {
-//         cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
-//     },
-// });
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/upload');
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+    },
+});
 
-// const upload = multer({ storage });
+const upload = multer({ storage });
 
 router.get('/', authenUser.verifyAuth, controller.callMethod('redirectCoreView'));
 

@@ -69,6 +69,22 @@ class FriendRepository extends BaseRepository {
             status: '1',
         });
     }
+
+    unfriendReq(user, data) {
+        return this.delete({
+            userId: data.friendId,
+            received: user.id,
+        });
+    }
+
+    unfriendRes(user, data) {
+        return this.update({
+            received: user.id,
+            friendId: data.friendId,
+        }, {
+            status: '1',
+        });
+    }
 }
 
 export default FriendRepository;

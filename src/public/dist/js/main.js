@@ -1,3 +1,22 @@
+$(document).ready(function() {
+  const socket = io.connect('http://localhost:4200');
+  socket.on('connect', function(data) {
+    socket.emit('join','Hello backend');
+  })
+  socket.on('sendMess', function(data) {
+    $('#receivedMes').append(`
+    <div class="message-item">
+        <div class="message-content">${data}</div>
+        <div class="message-action">| Pm 14:20</div>
+    </div>`);
+  })
+  $('#chatBar').submit(function(e){
+    e.preventDefault();
+    const message = $('#chatMess').val();
+    socket.emit('messages', message);
+  });
+});
+
 $(document).ready(function () {
   window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
   $('#register-phone-number').submit(function (event) {
@@ -230,6 +249,8 @@ $(document).ready(function() {
     const file = e.target.files[0];
     reader.onload = function(progressEvent) {
       const url = reader.result;
+      console.log(url);
+      
       const fd = new FormData();
       fd.append('avatar',url);
         $.ajax({
@@ -249,3 +270,21 @@ $(document).ready(function() {
     //   event.preventDefault();
   });
 })
+
+$(document).ready(function(){
+  $('#Unfriend').click(function(event) {
+    event.preventDefault();
+    const friendId = $('#AcceptReq').attr('data-id');
+    $.ajax({
+      type: "POST",
+      data: { friendId },
+      url: "/unfriend",
+      success: function(data){
+        if(data) {
+          alert('success');
+        }
+        else alert('die');
+      }
+    })
+  })
+});

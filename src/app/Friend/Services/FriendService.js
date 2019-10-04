@@ -41,6 +41,14 @@ class FriendService {
   friendList(user) {
     return this.repository.friendList(user);
   }
+
+  unfriendReq(user, data) {
+    return this.repository.unfriendReq(user, data);
+  }
+
+  unfriendRes(user, data) {
+    return this.repository.unfriendRes(user, data);
+  }
 }
 
 export default FriendService;

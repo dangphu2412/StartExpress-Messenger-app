@@ -8,4 +8,6 @@ router.post('/add-friend', controller.callMethod('addFriend'));
 
 router.post('/accept-friend', controller.callMethod('acceptFriendReq'));
 
+router.post('/unfriend', controller.callMethod('unfriend'));
+
 export default router;

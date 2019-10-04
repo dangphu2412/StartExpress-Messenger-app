@@ -34,6 +34,14 @@ class FriendController extends BaseController {
     await this.friendService.acceptFriendRes(user, data);
     return res.json();
   }
+
+  async unfriend(req, res) {
+    const data = req.body;
+    const { user } = req.session;
+    await this.friendService.unfriendReq(user, data);
+    await this.friendService.unfriendRes(user, data);
+    return res.json();
+  }
 }
 
 export default FriendController;

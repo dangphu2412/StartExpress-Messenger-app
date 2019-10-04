@@ -25,7 +25,8 @@ class ConversationController extends BaseController {
   uploadImgProfile(req, res) {
     const { file } = req;
     console.log(file);
-    // console.log(req.body);
+
+    console.log(req.body);
     return res.json(file);
   }
 }
