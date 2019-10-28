@@ -26,8 +26,8 @@ class FriendService {
     return this.repository.createFriendReq(user, data);
   }
 
-  createFriendRes(user, data) {
-    return this.repository.createFriendRes(user, data);
+  queryFrJustSent(user, data) {
+    return this.repository.queryFrJustSent(user, data);
   }
 
   acceptFriendReq(user, data) {
@@ -40,6 +40,18 @@ class FriendService {
 
   friendList(user) {
     return this.repository.friendList(user);
+  }
+
+  friendReq(user) {
+    return this.repository.friendReq(user);
+  }
+
+  unfriendReq(user, data) {
+    return this.repository.unfriendReq(user, data);
+  }
+
+  unfriendRes(user, data) {
+    return this.repository.unfriendRes(user, data);
   }
 }
 

@@ -13,18 +13,17 @@ class FriendController extends BaseController {
     const { user } = req.session;
     const data = req.body;
     const userCheck = await this.authService.checkUserEmail(data);
-    data.friendId = userCheck.id;
-    const friendCheck = await this.friendService.checkFriend(user, data);
     if (userCheck) {
+      data.friendId = userCheck.id;
+      const friendCheck = await this.friendService.checkFriend(user, data);
       if (!friendCheck) {
         await this.friendService.createFriendReq(user, data);
-        await this.friendService.createFriendRes(user, data);
-        data.sent = 'sent';
-        return res.json(data);
+        const friendData = await this.friendService.queryFrJustSent(user, data); //query ra data vua moi tao
+        return res.json(friendData);
       }
-      return res.json(data);
+      return res.json('sent');
     }
-    return res.json(data);
+    return res.json('sent');
   }
 
   async acceptFriendReq(req, res) {
@@ -32,6 +31,14 @@ class FriendController extends BaseController {
     const { user } = req.session;
     await this.friendService.acceptFriendReq(user, data);
     await this.friendService.acceptFriendRes(user, data);
+    return res.json();
+  }
+
+  async unfriend(req, res) {
+    const data = req.body;
+    const { user } = req.session;
+    await this.friendService.unfriendReq(user, data);
+    await this.friendService.unfriendRes(user, data);
     return res.json();
   }
 }

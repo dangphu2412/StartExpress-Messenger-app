@@ -1,4 +1,49 @@
-$(document).ready(function () {
+$(document).ready(function() {
+  const socket = io('/conversations');
+  socket.on('connect', function(data) {
+    socket.emit('join','Hello backend');;
+  })
+  socket.on('sendMess', function(msg) {
+    if ($.trim(msg)) {
+      $('#receivedMes').append(`
+      <div class="message-item">
+        <div class="message-content">${msg}</div>
+        <div class="message-action">NO not socket Pm 14:20</div>
+      </div>`);
+      const chat_body = $('.layout .content .chat .chat-body');
+      chat_body.scrollTop(chat_body.get(0).scrollHeight, -1).niceScroll({
+        cursorcolor: 'rgba(66, 66, 66, 0.20)',
+        cursorwidth: "4px",
+        cursorborder: '0px'
+      }).resize();
+    }
+  })
+  socket.on('sendFriendReq', function(data) {
+    console.log(data[0]);
+    $('#friendReqList').append(`
+      <li class="list-group-item">
+        <div class="users-list-body">
+            <h5>hello</h5>
+            <p>I know how important this file is to you. You can trust me ;)
+                <div class="users-list-action action-toggle">
+                    <div class="dropdown"><a data-toggle="dropdown" href="#"><i class="ti-more"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                          <a class="dropdown-item" data-id="2" id="AcceptReq" href="#">Accept</a>
+                          <a class="dropdown-item" href="#">Forward</a>
+                          <a class="dropdown-item" href="#">Delete</a></div>
+                    </div>
+                </div>
+            </p>
+        </div> 
+      </li>
+    `)
+  })
+  $('#chatBar').submit(function(e){
+    e.preventDefault();
+    socket.emit('messages',$('#chatMess').val());
+  });
+
+
   window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
   $('#register-phone-number').submit(function (event) {
     event.preventDefault();
@@ -43,9 +88,7 @@ $(document).ready(function () {
         });
       });
   })
-});
 
-$(document).ready(function() {
   $('#register-email').submit(function(event) {
     event.preventDefault();
     const firstName = $('input[name="firstName"]').val();
@@ -83,9 +126,8 @@ $(document).ready(function() {
       $('#alertRegister').css('display','block');
     });
   });
-});
 
-$(document).ready(function() {
+
   $('#login-form').submit(function(event) {
     event.preventDefault();
     const email = $('input[name="email"]').val();
@@ -121,11 +163,8 @@ $(document).ready(function() {
       }
     });
   });
-});
 
-  $(document).ready(function () {
-    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-    $('#login-phone-number').submit(function (event) {
+  $('#login-phone-number').submit(function (event) {
       event.preventDefault();
       const phoneNumber = $('input[name="phoneNumber"]').val();
       const appVerifier = window.recaptchaVerifier;
@@ -167,10 +206,8 @@ $(document).ready(function() {
           })
       });
     })
-  });
 
-$(document).ready(function() {
-    $('#logout').click(function(event) {      
+  $('#logout').click(function(event) {      
       event.preventDefault();
       console.log('got die');
       firebase.auth().signOut().then(function() {
@@ -179,10 +216,9 @@ $(document).ready(function() {
         console.log('got raped');
       })
     })
-});
 
-$(document).ready(function() {
-  $("#addFriend").submit(function(event) {
+
+  $('#addFriend').submit(function(event) {
     event.preventDefault();
     const email = $('input[name="email"]').val();
     const body = {
@@ -193,9 +229,11 @@ $(document).ready(function() {
       url: "/add-friend",
       data: body,
       success: function(data) {
-        if (data.sent) {
-          console.log('hello');
+        console.log(data);
+        if (data!='sent') {
           $('#success').css('display','block');
+          console.log(data);
+          socket.emit('friendReq',data);
         }
         else {
           $('#alert').css('display','block');
@@ -203,26 +241,22 @@ $(document).ready(function() {
       }
     })
   })
-})
 
-$(document).ready(function() {
+
   $('#AcceptReq').click(function(event) {
     event.preventDefault();
     const friendId = $('#AcceptReq').attr('data-id');
-    alert(friendId);
-    
     $.ajax({
       type: "POST",
       url: "/accept-friend",
       data: { friendId },
-      success: function() {
-          window.location.reload();
+      success: function(data) {
+          alert('Add friend successed');
       }
     })
   })
-})
 
-$(document).ready(function() {
+
   $('#customFile').change(function(e){
     e.stopPropagation();
     e.preventDefault();
@@ -230,6 +264,8 @@ $(document).ready(function() {
     const file = e.target.files[0];
     reader.onload = function(progressEvent) {
       const url = reader.result;
+      console.log(url);
+      
       const fd = new FormData();
       fd.append('avatar',url);
         $.ajax({
@@ -248,4 +284,21 @@ $(document).ready(function() {
     // $('#personelForm').submit(function(event) {
     //   event.preventDefault();
   });
-})
+
+
+  $('#Unfriend').click(function(event) {
+    event.preventDefault();
+    const friendId = $('#friendId').attr('data-friend');
+    $.ajax({
+      type: "POST",
+      data: { friendId },
+      url: "/unfriend",
+      success: function(data){
+        if(data) {
+          alert('success');
+        }
+        else alert('die');
+      }
+    })
+  })
+});

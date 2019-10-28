@@ -35,26 +35,17 @@ class FriendRepository extends BaseRepository {
         });
     }
 
-    createFriendRes(user, data) {
-        return this.create({
-            userId: data.friendId,
-            friendId: user.id,
-            received: data.friendId,
-            status: '0',
-        });
-    }
-
-    friendList(user) {
+    queryFrJustSent(user, data) {
         return this.listBy({
-            friendId: user.id,
-            received: user.id,
+            userId: user.id,
+            friendId: data.friendId,
         });
     }
 
     acceptFriendReq(user, data) {
         return this.update({
             userId: data.friendId,
-            received: user.id,
+            friendId: user.id,
         },
         {
             status: '1',
@@ -62,11 +53,41 @@ class FriendRepository extends BaseRepository {
     }
 
     acceptFriendRes(user, data) {
-        return this.update({
-            received: user.id,
+        return this.create({
+            userId: user.id,
             friendId: data.friendId,
-        }, {
+            received: data.friendId,
             status: '1',
+        });
+    }
+
+    friendList(user) {
+        return this.joinListBy('users', 'users.id', 'friends.received',
+        {
+            userId: user.id,
+            status: '1',
+        });
+    }
+
+    friendReq(user) {
+        return this.joinListBy('users', 'users.id', 'friends.userId',
+        {
+            received: user.id,
+            status: '0',
+        })
+    }
+
+    unfriendReq(user, data) {
+        return this.delete({
+            userId: user.id,
+            received: data.friendId,
+        });
+    }
+
+    unfriendRes(user, data) {
+        return this.delete({
+            received: user.id,
+            userId: data.friendId,
         });
     }
 }

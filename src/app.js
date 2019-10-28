@@ -3,14 +3,16 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-
+import mongoose from 'mongoose';
+import http from 'http';
+import socket from './config/socket';
+import model from './database/model';
 // import logger from 'morgan';
 import 'dotenv/config';
-
 import initRoutes from './config/routes';
 
 const app = express();
-
+const server = http.createServer(app);
 // view engine setup
 app.set('views', path.join(__dirname, 'resources/views'));
 app.set('view engine', 'pug');
@@ -21,17 +23,29 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const pgSession = require('connect-pg-simple')(session);
+mongoose.connect('mongodb://localhost/mongoDb', { useNewUrlParser: true, useUnifiedTopology: true });
+// Schema
+async function text() {
+  await model.Conversation.create({ member: [1, 2] });
+  const conversation = await model.Conversation.findOne();
+  console.log(conversation);
+}
+
+text();
+
+socket(server);
+
+const PgSession = require('connect-pg-simple')(session);
 
 const pgStoreConfig = {
-  conString: 'postgres://postgres:241299@localhost:5432/mess_app'
+  conString: 'postgres://postgres:241299@localhost:5432/mess_app',
 };
 app.use(session({
-  store: new pgSession(pgStoreConfig),
+  store: new PgSession(pgStoreConfig),
   secret: 'jW8aor76jpPX', // session secret
   resave: true,
   saveUninitialized: true,
-  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 },
 }));
 
 initRoutes(app);
@@ -52,4 +66,4 @@ app.use((err, req, res) => {
   res.render('error');
 });
 
-export default app;
+export default { app, server };

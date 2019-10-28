@@ -5,8 +5,7 @@
  */
 
 import debugLib from 'debug';
-import http from 'http';
-import app from '../app';
+import config from '../app';
 
 const debug = debugLib('messenger:server');
 /**
@@ -14,21 +13,18 @@ const debug = debugLib('messenger:server');
  */
 
 const port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+config.app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-const server = http.createServer(app);
-
 /**
  * Listen on provided port, on all network interfaces.
  */
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+config.server.listen(port);
+config.server.on('error', onError);
+config.server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -83,7 +79,7 @@ function onError(error) {
  */
 
 function onListening() {
-  const addr = server.address();
+  const addr = config.server.address();
   const bind = typeof addr === 'string'
     ? `pipe ${addr}`
     : `port ${addr.port}`;
