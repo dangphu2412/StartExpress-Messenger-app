@@ -59,7 +59,7 @@ class AuthRepository extends BaseRepository {
     });
   }
 
-  friendInfor(friendId) {
+  friendInfor() {
     return this.list();
   }
 }

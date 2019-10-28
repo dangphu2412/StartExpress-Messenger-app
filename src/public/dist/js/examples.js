@@ -26,9 +26,9 @@ $(function () {
         }
     };
 
-    setTimeout(function () {
-        ChatosExamle.Message.add();
-    }, 1000);
+    // setTimeout(function () {
+    //     ChatosExamle.Message.add();
+    // }, 1000);
 
     setTimeout(function () {
         // $('#disconnected').modal('show');

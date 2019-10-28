@@ -20,7 +20,7 @@ const upload = multer({ storage });
 
 router.get('/', authenUser.verifyAuth, controller.callMethod('redirectCoreView'));
 
-router.get('/conversations', controller.callMethod('conversation'));
+router.get('/conversations', authenUser.verifyAuth, controller.callMethod('conversation'));
 
 router.post('/upload-profile-image', upload.single('avatar'), controller.callMethod('uploadImgProfile'));
 

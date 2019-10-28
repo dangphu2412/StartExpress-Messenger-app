@@ -33,6 +33,10 @@ class BaseRepository {
     return this.cloneQuery().where(clauses).orWhere(orClauses).select(columns).first();
   }
 
+  joinListBy(table, tableContent, thisContent, clauses = {}) {
+    return this.cloneQuery().leftJoin(table, tableContent, thisContent).where(clauses);
+  }
+
   create(attributes, trx, returning = ['*']) {
     return this.cloneQuery().insert(attributes).returning(returning);
   }

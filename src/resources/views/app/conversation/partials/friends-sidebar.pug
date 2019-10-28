@@ -14,14 +14,12 @@
       .sidebar-body(tabindex='4' style='overflow: hidden; outline: none;')
         ul.list-group.list-group-flush
           each friend in friendList
-            each infor in friendInfor
-              if (friend.userId == infor.id && friend.status == 1)
                 li.list-group-item
-                  div
+                  #friendId(data-friend = friend.received)
                     figure.avatar
                       img.rounded-circle(src='dist/images/women_avatar5.jpg')
                   .users-list-body
-                    h5=infor.firstName
+                    h5=friend.firstName
                     p Lorem ipsum dolor sitsdc sdcsdc sdcsdcs
                     .users-list-action.action-toggle
                       .dropdown

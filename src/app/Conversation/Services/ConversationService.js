@@ -3,6 +3,8 @@ import Repository from '../Repositories/ConversationRepository';
 class ConversationService {
   static conversationService;
 
+  static io;
+
   constructor() {
     this.repository = Repository.getRepository();
   }
