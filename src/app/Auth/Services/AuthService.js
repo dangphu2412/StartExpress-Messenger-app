@@ -14,28 +14,34 @@ class AuthService {
     return this.authService;
   }
 
-  checkUserEmail(data) {
-    return this.repository.checkUserEmail(data);
+  async checkUserEmail(data) {
+    const checkUserEmail = await this.repository.checkUserEmail(data);
+    return checkUserEmail;
   }
 
-  checkUserPhone(data) {
-    return this.repository.checkUserPhone(data);
+  async checkUserPhone(data) {
+    const checkUserPhone = await this.repository.checkUserPhone(data);
+    return checkUserPhone;
   }
 
-  registerByEmailPost(data) {
-    return this.repository.registerUserEmail(data);
+  async registerByEmailPost(data) {
+    const registerByEmailPost = await this.repository.registerUserEmail(data);
+    return registerByEmailPost;
   }
 
-  registerByPhoneNumberPost(data) {
-    return this.repository.registerPhoneNumber(data);
+  async registerByPhoneNumberPost(data) {
+    const registerByPhoneNumberPost = await this.repository.registerPhoneNumber(data);
+    return registerByPhoneNumberPost;
   }
 
-  loginEmailCheck(data) {
-    return this.repository.loginEmailCheck(data);
+  async loginEmailCheck(data) {
+    const loginEmailCheck = await this.repository.loginEmailCheck(data);
+    return loginEmailCheck;
   }
 
-  friendInfor() {
-    return this.repository.friendInfor();
+  async friendInfor() {
+    const friendInfor = await this.repository.friendInfor();
+    return friendInfor;
   }
 }
 

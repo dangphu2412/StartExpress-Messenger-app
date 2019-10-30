@@ -1,20 +1,13 @@
 import socketIo from 'socket.io';
-import Conversation from '../app/Conversation/Services/ConversationService';
-
+// import Conversation from '../app/Conversation/Services/ConversationService';
+import FriendService from '../app/Friend/Services/FriendService';
 
 function socketConfig(server) {
     const io = socketIo(server);
-    Conversation.io = io.of('/conversations');
-    Conversation.io.on('connection', (socket) => {
-        socket.on('join', (data) => {
-            console.log(data);
-        });
+    FriendService.io = io.of('conversations');
+    FriendService.io.on('connection', (socket) => {
         socket.on('messages', (msg) => {
             socket.broadcast.emit('sendMess', msg);
-        });
-        socket.on('friendReq', (data) => {
-            console.log(data);
-            socket.broadcast.emit('sendFriendReq', data);
         });
     });
 }

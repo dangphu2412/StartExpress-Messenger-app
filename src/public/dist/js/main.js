@@ -19,7 +19,7 @@ $(document).ready(function() {
     }
   })
   socket.on('sendFriendReq', function(data) {
-    console.log(data[0]);
+    console.log(data);
     $('#friendReqList').append(`
       <li class="list-group-item">
         <div class="users-list-body">
@@ -224,16 +224,14 @@ $(document).ready(function() {
     const body = {
       email
     }
+    socket.emit('addFriend');
     $.ajax({
       type: "POST",
       url: "/add-friend",
       data: body,
       success: function(data) {
-        console.log(data);
         if (data!='sent') {
           $('#success').css('display','block');
-          console.log(data);
-          socket.emit('friendReq',data);
         }
         else {
           $('#alert').css('display','block');
