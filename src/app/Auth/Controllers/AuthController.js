@@ -1,5 +1,6 @@
 import BaseController from '../../../infrastructure/Controllers/BaseController';
 import AuthService from '../Services/AuthService';
+import admin from '../../../config/firebase';
 
 class AuthController extends BaseController {
   constructor() {
@@ -18,7 +19,7 @@ class AuthController extends BaseController {
   async registerByEmailPost(req, res) {
     const data = req.body;
     const userCheck = await this.authService.checkUserEmail(data);
-    if (await userCheck) {
+    if (userCheck) {
       return res.json();
     }
     await this.authService.registerByEmailPost(data);
@@ -35,8 +36,8 @@ class AuthController extends BaseController {
     admin.auth().verifyIdToken(data.idToken).then(async (decodedToken) => {
       const { uid } = decodedToken;
       if (uid) {
-        const userCheck = this.authService.checkUserPhone(data);
-        if (await userCheck) {
+        const userCheck = await this.authService.checkUserPhone(data);
+        if (userCheck) {
             res.json(data);
         }
         await this.authService.registerByPhoneNumber(data);
@@ -82,8 +83,8 @@ class AuthController extends BaseController {
     admin.auth().verifyIdToken(data.idToken).then(async (decodedToken) => {
       const { uid } = decodedToken;
       if (uid) {
-        const userCheck = this.authService.registerPhoneCheck;
-        if (await userCheck) {
+        const userCheck = await this.authService.registerPhoneCheck;
+        if (userCheck) {
           req.session.user = data.phoneNumber;
           data.success = true;
           res.json(data);

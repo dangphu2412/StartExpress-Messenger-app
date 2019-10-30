@@ -3,6 +3,8 @@ import Repository from '../Repositories/FriendRepository';
 class FriendService {
   static friendService;
 
+  static io;
+
   constructor() {
     this.repository = Repository.getRepository();
   }
@@ -14,44 +16,65 @@ class FriendService {
     return this.friendService;
   }
 
-  checkUserEmail(data) {
-    return this.repository.checkUserEmail(data);
+  async checkUserEmail(data) {
+    const checkUserEmail = await this.repository.checkUserEmail(data);
+    return checkUserEmail;
   }
 
-  checkFriend(user, data) {
-    return this.repository.checkFriend(user, data);
+  async checkFriend(user, data) {
+    const checkFriend = await this.repository.checkFriend(user, data);
+    return checkFriend;
   }
 
-  createFriendReq(user, data) {
-    return this.repository.createFriendReq(user, data);
+  async createFriendReq(user, data) {
+    const createFriendReq = await this.repository.createFriendReq(user, data);
+    return createFriendReq;
   }
 
-  queryFrJustSent(user, data) {
-    return this.repository.queryFrJustSent(user, data);
+  async queryFrJustSent(user, data) {
+    const queryFrJustSent = await this.repository.queryFrJustSent(user, data);
+    const io = FriendService.io.of('conversations');
+    // io.on('connection', (socket) => {
+    //   socket.broadcast.emit('sendFriendReq', queryFrJustSent);
+    // });
+    io.emit('sendFriendReq', queryFrJustSent);
+    return queryFrJustSent;
   }
 
-  acceptFriendReq(user, data) {
-    return this.repository.acceptFriendReq(user, data);
+  async acceptFriendReq(user, data) {
+    const acceptFriendReq = await this.repository.acceptFriendReq(user, data);
+    return acceptFriendReq;
   }
 
-  acceptFriendRes(user, data) {
-    return this.repository.acceptFriendRes(user, data);
+  async acceptFriendRes(user, data) {
+    const acceptFriendRes = await this.repository.acceptFriendRes(user, data);
+    return acceptFriendRes;
   }
 
-  friendList(user) {
-    return this.repository.friendList(user);
+  async friendList(user) {
+    const friendList = await this.repository.friendList(user);
+    const io = FriendService.io.of('conversations');
+    io.on('connection', (socket) => {
+      socket.on('join', (say) => {
+          console.log(say);
+      });
+    });
+    return friendList;
   }
 
-  friendReq(user) {
-    return this.repository.friendReq(user);
+  async friendReq(user) {
+    const friendReq = await this.repository.friendReq(user);
+    return friendReq;
   }
 
-  unfriendReq(user, data) {
-    return this.repository.unfriendReq(user, data);
+  async unfriendReq(user, data) {
+    const unfriendReq = await this.repository.unfriendReq(user, data);
+    return unfriendReq;
   }
 
-  unfriendRes(user, data) {
-    return this.repository.unfriendRes(user, data);
+  async unfriendRes(user, data) {
+    const unfriendRes = await this.repository.unfriendRes(user, data);
+    return unfriendRes;
   }
 }
 

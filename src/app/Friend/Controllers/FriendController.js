@@ -18,7 +18,7 @@ class FriendController extends BaseController {
       const friendCheck = await this.friendService.checkFriend(user, data);
       if (!friendCheck) {
         await this.friendService.createFriendReq(user, data);
-        const friendData = await this.friendService.queryFrJustSent(user, data); //query ra data vua moi tao
+        const friendData = await this.friendService.queryFrJustSent(user, data);
         return res.json(friendData);
       }
       return res.json('sent');
