@@ -33,7 +33,7 @@ class FriendService {
 
   async queryFrJustSent(user, data) {
     const queryFrJustSent = await this.repository.queryFrJustSent(user, data);
-    const io = FriendService.io.of('conversations');
+    const { io } = FriendService;
     // io.on('connection', (socket) => {
     //   socket.broadcast.emit('sendFriendReq', queryFrJustSent);
     // });
