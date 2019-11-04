@@ -15,6 +15,16 @@ class ConversationService {
     }
     return this.conversationService;
   }
+
+  async createGroupChat(name, description, friendInfo) {
+    const createInfo = await this.repository.createGroupChat(name, description, friendInfo);
+    return createInfo;
+  }
+
+  async groupChat(user) {
+    const queryGroupChat = await this.repository.queryGroupChat(user);
+    return queryGroupChat;
+  }
 }
 
 export default ConversationService;

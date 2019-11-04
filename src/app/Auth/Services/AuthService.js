@@ -43,6 +43,11 @@ class AuthService {
     const friendInfor = await this.repository.friendInfor();
     return friendInfor;
   }
+
+  async queryUserData(data) {
+    const queryInfo = await this.repository.queryUserData(data);
+    return queryInfo;
+  }
 }
 
 export default AuthService;

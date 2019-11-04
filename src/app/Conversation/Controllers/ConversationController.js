@@ -19,7 +19,8 @@ class ConversationController extends BaseController {
     const { user } = req.session;
     const friendList = await this.friendService.friendList(user);
     const friendReq = await this.friendService.friendReq(user);
-    return res.render('app/conversation/index', { friendList, friendReq });
+    const groupChat = await this.conversationService.groupChat(user);
+    return res.render('app/conversation/index', { friendList, friendReq, groupChat, user });
   }
 
   uploadImgProfile(req, res) {

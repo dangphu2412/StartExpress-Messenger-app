@@ -10,4 +10,6 @@ router.post('/accept-friend', controller.callMethod('acceptFriendReq'));
 
 router.post('/unfriend', controller.callMethod('unfriend'));
 
+router.post('/createGroup', controller.callMethod('createGroup'));
+
 export default router;

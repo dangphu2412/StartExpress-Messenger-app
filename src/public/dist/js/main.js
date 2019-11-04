@@ -19,16 +19,17 @@ $(document).ready(function() {
     }
   })
   socket.on('sendFriendReq', function(data) {
-    console.log(data);
+    console.log(data[0]);
     $('#friendReqList').append(`
       <li class="list-group-item">
         <div class="users-list-body">
-            <h5>hello</h5>
+            <h5>${data[0].firstName}</h5>
             <p>I know how important this file is to you. You can trust me ;)
                 <div class="users-list-action action-toggle">
-                    <div class="dropdown"><a data-toggle="dropdown" href="#"><i class="ti-more"></i></a>
+                    <div class="dropdown">
+                        <a data-toggle="dropdown" href="#"><i class="ti-more"></i></a>
                         <div class="dropdown-menu dropdown-menu-right">
-                          <a class="dropdown-item" data-id="2" id="AcceptReq" href="#">Accept</a>
+                          <a class="dropdown-item" id="AcceptReq" data-id="${data[0].userId}" href="#">Accept</a>
                           <a class="dropdown-item" href="#">Forward</a>
                           <a class="dropdown-item" href="#">Delete</a></div>
                     </div>
@@ -157,7 +158,6 @@ $(document).ready(function() {
       } 
       else {
         console.log(user.emailVerified);
-        
         event.preventDefault();
         $('#alertverifyLogin').css('display','block');
       }
@@ -249,7 +249,9 @@ $(document).ready(function() {
       url: "/accept-friend",
       data: { friendId },
       success: function(data) {
+        if (data == 'success') {
           alert('Add friend successed');
+        }
       }
     })
   })
@@ -296,6 +298,23 @@ $(document).ready(function() {
           alert('success');
         }
         else alert('die');
+      }
+    })
+  })
+
+  $('#newGroup').submit((event) => {
+    event.preventDefault(); 
+    const data = {
+      name: $("#group_name").val(),
+      user: $("#userFriend").val(),
+      description: $("#description").val()
+    }
+    $.ajax({
+      type: "POST",
+      data: data,
+      url: '/createGroup',
+      success: function(data) {
+        (data == 'hello')?alert('Create success'):alert('Create failed');
       }
     })
   })

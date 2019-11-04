@@ -34,10 +34,8 @@ class FriendService {
   async queryFrJustSent(user, data) {
     const queryFrJustSent = await this.repository.queryFrJustSent(user, data);
     const { io } = FriendService;
-    // io.on('connection', (socket) => {
-    //   socket.broadcast.emit('sendFriendReq', queryFrJustSent);
-    // });
     io.emit('sendFriendReq', queryFrJustSent);
+    // io.emit('sendFriendReq', queryFrJustSent);
     return queryFrJustSent;
   }
 
@@ -53,12 +51,6 @@ class FriendService {
 
   async friendList(user) {
     const friendList = await this.repository.friendList(user);
-    const io = FriendService.io.of('conversations');
-    io.on('connection', (socket) => {
-      socket.on('join', (say) => {
-          console.log(say);
-      });
-    });
     return friendList;
   }
 

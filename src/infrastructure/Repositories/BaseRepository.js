@@ -1,4 +1,5 @@
 import knex from '../../database/connection';
+import { Conversation } from '../../database/model/index';
 
 class BaseRepository {
   constructor() {
@@ -15,6 +16,10 @@ class BaseRepository {
 
   listBy(clauses = {}, columns = ['*']) {
     return this.cloneQuery().where(clauses).select(columns);
+  }
+
+  listByFirst(clauses = {}, columns = []) {
+    return this.cloneQuery().where(clauses).select(columns).first();
   }
 
   count() {
@@ -35,6 +40,10 @@ class BaseRepository {
 
   joinListBy(table, tableContent, thisContent, clauses = {}) {
     return this.cloneQuery().leftJoin(table, tableContent, thisContent).where(clauses);
+  }
+
+  joinListOne(table, tableContent, thisContent, clauses = {}) {
+    return this.cloneQuery().leftJoin(table, tableContent, thisContent).where(clauses).first();
   }
 
   create(attributes, trx, returning = ['*']) {

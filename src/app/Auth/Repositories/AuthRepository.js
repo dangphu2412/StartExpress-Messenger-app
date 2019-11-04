@@ -62,6 +62,15 @@ class AuthRepository extends BaseRepository {
   friendInfor() {
     return this.list();
   }
+
+  queryUserData(data) {
+    return this.listByFirst({
+      firstName: data,
+    },
+    ['id',
+    'firstName',
+    'email']);
+  }
 }
 
 export default AuthRepository;
