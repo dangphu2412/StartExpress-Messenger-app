@@ -16,7 +16,7 @@
           .sidebar-body(tabindex='3' style='overflow: hidden; outline: none;')
             ul.list-group.list-group-flush
               each friend in friendList
-                  li.list-group-item
+                  li.list-group-item#friend.id
                     figure.avatar.avatar-state-success
                       img.rounded-circle(src='dist/images/man_avatar1.jpg')
                     .users-list-body
@@ -24,7 +24,26 @@
                       p Traditional heading elscas sdscsd sdcsdsc
                       .users-list-action
                         .new-message-count 2
-
+              each group in groupChat
+                  li.list-group-item#group
+                    .avatar-group
+                      figure.avatar
+                        span.avatar-title.bg-warning.bg-success.rounded-circle
+                          i.fa.fa-users
+                    .users-list-body
+                      h5=group.name
+                      p
+                        strong Maher Ruslandi: 
+                        | Hello!!!
+                      .users-list-action.action-toggle
+                        .dropdown
+                          a(data-toggle='dropdown' href='#')
+                            i.ti-more
+                          .dropdown-menu.dropdown-menu-right
+                            a.dropdown-item(href='#') Open
+                            a.dropdown-item.active(href='#' data-navigation-target='contact-information') Profile
+                            a.dropdown-item(href='#') Add to archive
+                            a.dropdown-item(href='#') Delete
                   //- li.list-group-item.open-chat
                   //-   div
                   //-     figure.avatar

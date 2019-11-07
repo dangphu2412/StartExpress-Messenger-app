@@ -1,12 +1,14 @@
 import BaseController from '../../../infrastructure/Controllers/BaseController';
 import FriendService from '../Services/FriendService';
 import AuthService from '../../Auth/Services/AuthService';
+import Conversation from '../../Conversation/Services/ConversationService';
 
 class FriendController extends BaseController {
   constructor() {
     super();
     this.friendService = FriendService.getService();
     this.authService = AuthService.getService();
+    this.conversationService = Conversation.getService();
   }
 
   async addFriend(req, res) {
@@ -31,7 +33,7 @@ class FriendController extends BaseController {
     const { user } = req.session;
     await this.friendService.acceptFriendReq(user, data);
     await this.friendService.acceptFriendRes(user, data);
-    return res.json();
+    return res.json('success');
   }
 
   async unfriend(req, res) {

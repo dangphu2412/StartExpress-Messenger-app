@@ -24,4 +24,6 @@ router.get('/conversations', authenUser.verifyAuth, controller.callMethod('conve
 
 router.post('/upload-profile-image', upload.single('avatar'), controller.callMethod('uploadImgProfile'));
 
+router.post('/createGroup', controller.callMethod('createGroup'));
+
 export default router;

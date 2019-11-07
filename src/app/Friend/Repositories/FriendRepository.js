@@ -36,9 +36,11 @@ class FriendRepository extends BaseRepository {
     }
 
     queryFrJustSent(user, data) {
-        return this.listBy({
+        return this.joinListBy('users', 'users.id', 'friends.userId',
+        {
             userId: user.id,
             friendId: data.friendId,
+            status: '0',
         });
     }
 
@@ -66,7 +68,7 @@ class FriendRepository extends BaseRepository {
         {
             userId: user.id,
             status: '1',
-        });
+        }, ['users.id as id', 'friends.userId', 'friends.received', 'friends.status', 'users.firstName', 'users.avatar']);
     }
 
     friendReq(user) {
@@ -74,7 +76,7 @@ class FriendRepository extends BaseRepository {
         {
             received: user.id,
             status: '0',
-        })
+        });
     }
 
     unfriendReq(user, data) {

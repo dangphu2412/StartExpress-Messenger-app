@@ -1,4 +1,5 @@
 import BaseRepository from '../../../infrastructure/Repositories/BaseRepository';
+import model from '../../../database/model';
 
 class ConversationRepository extends BaseRepository {
     static repository;
@@ -12,6 +13,27 @@ class ConversationRepository extends BaseRepository {
 
     getTableName() {
         return 'users';
+    }
+
+    async createGroupChat(data) {
+        const create = await model.Conversation.create({
+            name: data.name,
+            description: data.description,
+            userIds: data['_id[]'],
+            memberId: data['id[]'],
+        });
+        console.log(create);
+    return create;
+    }
+
+    async queryGroupChat(user) {
+        console.log(user.id);
+        
+        const query = await model.Conversation.find({
+            memberId: user.id,
+        });
+        console.log(query);
+        return query;
     }
 }
 

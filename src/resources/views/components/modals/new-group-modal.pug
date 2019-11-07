@@ -8,13 +8,20 @@
           button.close(type='button' data-dismiss='modal' aria-label='Close')
             i.ti-close
         .modal-body
-          form
+          form#createGroupChat
             .form-group
               label.col-form-label(for='group_name') Group name
               input#group_name.form-control(type='text')
             .form-group
               label.col-form-label(for='users') Users
-              input#users.form-control(type='text' placeholder='Find user')
+              select#userFriend.w-100.js-example-basic-multiple(name="states[]" multiple="multiple")
+                each friend in friendInfo
+                  if friend.id == user.id 
+                    option.hidden(selected data-id=friend.id data-objId=friend._id)=friend.name
+                  else
+                    option(data-id=friend.id data-objId=friend._id)=friend.name
+              </select>
+
             .form-group
               .avatar-group
                 figure.avatar
@@ -33,5 +40,5 @@
             .form-group
               label.col-form-label(for='description') Description
               textarea#description.form-control
-        .modal-footer
-          button.btn.btn-primary(type='button') Create Group
+            button.btn.btn-primary(type='submit') Create Group
+        //- .modal-footer
