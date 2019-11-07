@@ -35,7 +35,6 @@ class FriendService {
     const queryFrJustSent = await this.repository.queryFrJustSent(user, data);
     const { io } = FriendService;
     io.emit('sendFriendReq', queryFrJustSent);
-    // io.emit('sendFriendReq', queryFrJustSent);
     return queryFrJustSent;
   }
 

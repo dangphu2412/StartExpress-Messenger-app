@@ -29,6 +29,13 @@ class AuthService {
     return registerByEmailPost;
   }
 
+  async createUserChat(user) {
+    console.log(user);
+    
+    const create = await this.repository.createUserChat(user);
+    return create;
+  }
+
   async registerByPhoneNumberPost(data) {
     const registerByPhoneNumberPost = await this.repository.registerPhoneNumber(data);
     return registerByPhoneNumberPost;
@@ -47,6 +54,16 @@ class AuthService {
   async queryUserData(data) {
     const queryInfo = await this.repository.queryUserData(data);
     return queryInfo;
+  }
+
+  async queryUserChat(data) {
+    const queryUserChat = await this.repository.queryUserChat(data);
+    return queryUserChat;
+  }
+
+  async friendInfo(member) {
+    const friendInfo = await this.repository.queryInfoChat(member);
+    return friendInfo;
   }
 }
 

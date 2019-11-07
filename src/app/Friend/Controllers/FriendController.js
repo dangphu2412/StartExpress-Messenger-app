@@ -43,38 +43,6 @@ class FriendController extends BaseController {
     await this.friendService.unfriendRes(user, data);
     return res.json();
   }
-
-  async createGroup(req, res) {
-    const data = req.body['user[]'];
-    const { description } = req.body;
-    const { name } = req.body;
-    const friendInfo = [];
-    // const info = await this.authService.queryUserData(data);
-    // console.log(info);
-    // friendInfo.push(info);
-    // data.forEach((e) => {
-    //     const info = this.authService.queryUserData(e);
-    //     console.log(info);
-    //     friendInfo.push(info);
-    // });
-    // await Promise.all(friendInfo);
-    for (let i = 0; i < data.length; i++) {
-      const element = data[i];
-      const info = await this.authService.queryUserData(element);
-      friendInfo.push(info);
-    }
-
-    // const promiseInfo = data.map(async (option) => {
-    //   console.log(option);
-    //   const info = await this.authenService.queryUserData(option);
-    //   return info;
-    // });
-    // const friendInfo = await Promise.all(promiseInfo);
-    // console.log(friendInfo);
-    
-    await this.conversationService.createGroupChat(name, description, friendInfo);
-    return res.json('hello');
-  }
 }
 
 export default FriendController;

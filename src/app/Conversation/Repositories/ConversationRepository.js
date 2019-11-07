@@ -15,20 +15,24 @@ class ConversationRepository extends BaseRepository {
         return 'users';
     }
 
-    async createGroupChat(name, description, friendInfo) {
+    async createGroupChat(data) {
         const create = await model.Conversation.create({
-            name,
-            description,
-            member: friendInfo,
+            name: data.name,
+            description: data.description,
+            userIds: data['_id[]'],
+            memberId: data['id[]'],
         });
         console.log(create);
     return create;
     }
 
     async queryGroupChat(user) {
+        console.log(user.id);
+        
         const query = await model.Conversation.find({
-            'member.firstName': user.firstName,
+            memberId: user.id,
         });
+        console.log(query);
         return query;
     }
 }

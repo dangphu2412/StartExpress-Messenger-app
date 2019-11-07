@@ -22,7 +22,8 @@ class AuthController extends BaseController {
     if (userCheck) {
       return res.json();
     }
-    await this.authService.registerByEmailPost(data);
+    const user = await this.authService.registerByEmailPost(data);
+    await this.authService.createUserChat(user[0]);
     data.success = true;
     return res.json(data);
   }
@@ -40,7 +41,8 @@ class AuthController extends BaseController {
         if (userCheck) {
             res.json(data);
         }
-        await this.authService.registerByPhoneNumber(data);
+        const user = await this.authService.registerByPhoneNumber(data);
+        await this.authService.createUserChat(user[0]);
         data.success = true;
         return res.json(data);
       }

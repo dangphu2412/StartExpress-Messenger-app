@@ -38,8 +38,8 @@ class BaseRepository {
     return this.cloneQuery().where(clauses).orWhere(orClauses).select(columns).first();
   }
 
-  joinListBy(table, tableContent, thisContent, clauses = {}) {
-    return this.cloneQuery().leftJoin(table, tableContent, thisContent).where(clauses);
+  joinListBy(table, tableContent, thisContent, clauses = {}, columns = []) {
+    return this.cloneQuery().leftJoin(table, tableContent, thisContent).where(clauses).select(columns);
   }
 
   joinListOne(table, tableContent, thisContent, clauses = {}) {

@@ -1,4 +1,5 @@
 import BaseRepository from '../../../infrastructure/Repositories/BaseRepository';
+import model from '../../../database/model';
 
 class AuthRepository extends BaseRepository {
   static repository;
@@ -70,6 +71,29 @@ class AuthRepository extends BaseRepository {
     ['id',
     'firstName',
     'email']);
+  }
+
+  async queryUserChat(data) {
+    const userData = await model.User.find({
+      name: { $in: data },
+    }, '_id');
+    return userData;
+  }
+
+  async queryInfoChat(member) {
+    const query = await model.User.find({
+      id: { $in: member },
+    });
+    return query;
+  }
+
+  async createUserChat(user) {
+    const createMongo = await model.User.create({
+      id: user.id,
+      name: user.firstName,
+      avatar: user.avatar,
+    });
+    return createMongo;
   }
 }
 

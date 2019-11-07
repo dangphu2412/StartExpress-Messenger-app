@@ -16,7 +16,7 @@
           .sidebar-body(tabindex='3' style='overflow: hidden; outline: none;')
             ul.list-group.list-group-flush
               each friend in friendList
-                  li.list-group-item
+                  li.list-group-item#friend.id
                     figure.avatar.avatar-state-success
                       img.rounded-circle(src='dist/images/man_avatar1.jpg')
                     .users-list-body
@@ -25,7 +25,7 @@
                       .users-list-action
                         .new-message-count 2
               each group in groupChat
-                  li.list-group-item
+                  li.list-group-item#group
                     .avatar-group
                       figure.avatar
                         span.avatar-title.bg-warning.bg-success.rounded-circle

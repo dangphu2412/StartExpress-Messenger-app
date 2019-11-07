@@ -16,8 +16,9 @@ class ConversationService {
     return this.conversationService;
   }
 
-  async createGroupChat(name, description, friendInfo) {
-    const createInfo = await this.repository.createGroupChat(name, description, friendInfo);
+  async createGroupChat(data) {
+    console.log(data);
+    const createInfo = await this.repository.createGroupChat(data);
     return createInfo;
   }
 

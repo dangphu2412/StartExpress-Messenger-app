@@ -44,7 +44,8 @@ $(document).ready(function() {
     socket.emit('messages',$('#chatMess').val());
   });
 
-
+  // $('.js-example-basic-multiple').select2();
+  
   window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
   $('#register-phone-number').submit(function (event) {
     event.preventDefault();
@@ -303,12 +304,23 @@ $(document).ready(function() {
   })
 
   $('#newGroup').submit((event) => {
-    event.preventDefault(); 
+    event.preventDefault();
+    const id = []; 
+    const idObj = [];
+    $("#userFriend option:selected").each(function() {
+        id.push($(this).attr('data-id'));
+        idObj.push($(this).attr('data-objId'));
+    });
+    console.log(idObj);
     const data = {
       name: $("#group_name").val(),
-      user: $("#userFriend").val(),
-      description: $("#description").val()
+      description: $("#description").val(),
+      id: id,
+      _id: idObj,
     }
+    
+    console.log('hello');
+    
     $.ajax({
       type: "POST",
       data: data,

@@ -68,7 +68,7 @@ class FriendRepository extends BaseRepository {
         {
             userId: user.id,
             status: '1',
-        });
+        }, ['users.id as id', 'friends.userId', 'friends.received', 'friends.status', 'users.firstName', 'users.avatar']);
     }
 
     friendReq(user) {

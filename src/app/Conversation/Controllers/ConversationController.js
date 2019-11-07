@@ -17,10 +17,13 @@ class ConversationController extends BaseController {
 
   async conversation(req, res) {
     const { user } = req.session;
-    const friendList = await this.friendService.friendList(user);
-    const friendReq = await this.friendService.friendReq(user);
+    const friendList = await this.friendService.friendList(user); // list fr
+    const friendReq = await this.friendService.friendReq(user);   // friend request
+    const member = friendList.map((e) => e.id);  // copy id into member
+    member.push(user.id);
+    const friendInfo = await this.authService.friendInfo(member); // query information of user in mongo
     const groupChat = await this.conversationService.groupChat(user);
-    return res.render('app/conversation/index', { friendList, friendReq, groupChat, user });
+    return res.render('app/conversation/index', { friendList, friendReq, friendInfo, groupChat, user });
   }
 
   uploadImgProfile(req, res) {
@@ -29,6 +32,12 @@ class ConversationController extends BaseController {
 
     console.log(req.body);
     return res.json(file);
+  }
+
+  async createGroup(req, res) {
+    const data = req.body;
+    await this.conversationService.createGroupChat(data);
+    return res.json('hello');
   }
 }
 

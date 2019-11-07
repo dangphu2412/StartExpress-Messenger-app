@@ -5,11 +5,11 @@ const { Schema } = mongoose;
 const conversationSchema = new Schema({
     name: String,
     description: String,
-    member: [{
-        id: Number,
-        firstName: String,
-        email: String,
+    userIds: [{
+        type: Schema.Types.ObjectId,
+        ref: 'user',
     }],
+    memberId: [Number],
     },
     {
         timestamps: true,
