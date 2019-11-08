@@ -95,6 +95,14 @@ class AuthRepository extends BaseRepository {
     });
     return createMongo;
   }
+
+  async queryUser(data) {
+    console.log(data);
+    const search = await model.User.find({
+        name: { $regex: data },
+    });
+    return search;
+  }
 }
 
 export default AuthRepository;

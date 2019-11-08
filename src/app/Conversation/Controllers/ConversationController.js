@@ -39,6 +39,12 @@ class ConversationController extends BaseController {
     await this.conversationService.createGroupChat(data);
     return res.json('hello');
   }
+
+  async searchUser(req, res) {
+    const data = req.body.value;
+    const value = await this.authService.queryUser(data);
+    return res.json(value);
+  }
 }
 
 export default ConversationController;

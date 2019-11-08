@@ -39,182 +39,28 @@ $(document).ready(function() {
       </li>
     `)
   })
+
+function arrRemove(arr, value) {
+  return arr.filter(function(element) {
+    return element!=value;
+  })
+}
+
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+
   $('#chatBar').submit(function(e){
     e.preventDefault();
     socket.emit('messages',$('#chatMess').val());
   });
 
-  // $('.js-example-basic-multiple').select2();
-  
-  window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-  $('#register-phone-number').submit(function (event) {
-    event.preventDefault();
-    const lastName = $('input[name="lastName"]').val();
-    const firstName = $('input[name="firstName"]').val();
-    const phoneNumber = $('input[name="phoneNumber"]').val();
-    const appVerifier = window.recaptchaVerifier;
-    firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-      .then(function (confirmationResult) {
-        window.confirmationResult = confirmationResult;
-        $('#register-phone-step1').remove();
-        $('#register-phone-step2').css('display', 'block');
-        $('#register-number-verify').submit(function (event) {
-          event.preventDefault();
-          const code = $('input[name="code"]').val();
-          confirmationResult.confirm(code).then(function (result) {
-            firebase.auth().currentUser.getIdToken(true).then(function (idToken) {
-              const user = result.user;
-              console.log(user);
-              const body = {
-                lastName,
-                firstName,
-                phoneNumber,
-                idToken
-              }
-              console.log(body);
-              $.ajax({
-                type: "POST",
-                url: "/register-phone-number",
-                data: body,
-                success: function(data) {
-                  if (data.success) {
-                    window.location.href = '/login-phone-number';
-                  }
-                  else {
-                    $('#alert').css('display','block');
-                  }
-                }
-              })
-            })            
-          });
-        });
-      });
-  })
-
-  $('#register-email').submit(function(event) {
-    event.preventDefault();
-    const firstName = $('input[name="firstName"]').val();
-    const lastName = $('input[name="lastName"]').val();
-    const email = $('input[name="email"]').val();
-    const password = $('input[name="password"]').val();
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(function(){
-        const user = firebase.auth().currentUser;
-        user.sendEmailVerification();
-        window.localStorage.setItem('emailForSignIn', email);
-        const body = {
-          firstName,
-          lastName,
-          email,
-          password,
-        }
-        $.ajax({
-          type: 'POST',
-          url: '/register-email',
-          data: body,
-          success: function (data) {            
-            if (data.success) {
-              $('#block-register').remove();
-              $('#verify-email').css('display','block');
-            }
-            else {
-              window.location.href = '/register-email';
-            }
-          }
-        })
-      })  
-    .catch(function(error) {
-      event.preventDefault();
-      $('#alertRegister').css('display','block');
-    });
-  });
-
-
-  $('#login-form').submit(function(event) {
-    event.preventDefault();
-    const email = $('input[name="email"]').val();
-    const password = $('input[name="password"]').val(); 
-    firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
-      const user = firebase.auth().currentUser;
-      if (user.emailVerified) {
-        console.log(user);
-          const body = {
-            email,
-            password
-          }
-          $.ajax({
-            type: 'POST',
-            url: '/login-email',
-            data: body,
-            success: function (data) {            
-              if (data.href) {
-                window.location.href = `${data.href}`;
-              }
-              else {
-                event.preventDefault();
-                $('#alertLogin').css('display','block');
-              }
-            }
-          })
-      } 
-      else {
-        console.log(user.emailVerified);
-        event.preventDefault();
-        $('#alertverifyLogin').css('display','block');
-      }
-    });
-  });
-
-  $('#login-phone-number').submit(function (event) {
-      event.preventDefault();
-      const phoneNumber = $('input[name="phoneNumber"]').val();
-      const appVerifier = window.recaptchaVerifier;
-      firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-        .then(function (confirmationResult) {
-          window.confirmationResult = confirmationResult;
-          $('#login-phone-step1').remove();
-          $('#login-phone-step2').css('display', 'block');
-          $('#login-number-verify').submit(function (event) {
-            event.preventDefault();
-            const codeLoginPhone = $('input[name="codeLoginPhone"]').val();          
-            confirmationResult.confirm(codeLoginPhone).then(function (result) {
-              firebase.auth().currentUser.getIdToken(true).then(function (idToken) {
-                console.log(idToken);
-                const body = {
-                  phoneNumber,
-                  idToken
-                }
-                console.log(body);
-                $.ajax({
-                  type: "POST",
-                  url: "/login-phone-number",
-                  data: body,
-                  success: function(data) {
-                    console.log(data);
-                    if (data.success) {
-                      window.location.href = '/';
-                    }
-                    else {
-                      $('#alertauthenLogin').css('display','block');
-                    }
-                  }
-                })
-              })            
-            }).catch((error) => {
-              window.location.reload();
-              console.log(error);
-            });
-          })
-      });
-    })
-
   $('#logout').click(function(event) {      
       event.preventDefault();
-      console.log('got die');
       firebase.auth().signOut().then(function() {
         window.location.href = '/logout'
       }).catch((error) => {
-        console.log('got raped');
+        alert('Can t log out');
       })
     })
 
@@ -311,23 +157,82 @@ $(document).ready(function() {
         id.push($(this).attr('data-id'));
         idObj.push($(this).attr('data-objId'));
     });
-    console.log(idObj);
     const data = {
       name: $("#group_name").val(),
       description: $("#description").val(),
       id: id,
       _id: idObj,
     }
-    
-    console.log('hello');
-    
     $.ajax({
       type: "POST",
       data: data,
       url: '/createGroup',
       success: function(data) {
-        (data == 'hello')?alert('Create success'):alert('Create failed');
+        (data == 'hello')?$("#newGroup").modal('hide'):alert('Create failed');
       }
     })
+  })
+
+  $('#searchUser').keyup(function() {
+    const value = $(this).val();
+    if ($.trim(value)) {
+      const data = { value };
+      $.ajax({
+        type: "POST",
+        data: data,
+        url: '/searchUser',
+        success: function(data) {
+          if (data) {
+                $('#menuSearchUser > a').each(function() {
+                  $(this).remove();
+                });
+                $('#userOption').addClass('hidden');
+                data.forEach((e) => {
+                  $('#menuSearchUser').append(`
+                      <a class = "dropdown-item" href='#' data-id= ${e.id} data-objId=${e._id} >${e.name} </a>
+                  `);
+                })
+            }
+            else {
+              $('#userOption').addClass('hidden');
+            }
+        }
+      })  
+    }
+    else {
+      $('#userOption').removeClass('hidden');
+      $('#menuSearchUser > a').each(function() {
+        $(this).remove();
+      });
+    }    
+  })
+
+  $('#userOption a').click(function() {
+    const id = $(this).attr('data-id');
+    const _id = $(this).attr('data-objId');
+    const name = $(this).attr('data-name');
+    let check = 0;
+    $('#userChosenGroup .avatar').each(function () {
+      if ($(this).attr('data-id') == id) {
+        check++;
+      }
+    })
+    if (!check) {
+      $('#userChosenGroup').append(`                  
+      <figure class = "avatar" data-toggle="tooltip" data-placement="top" title="${name}" data-id=${id}>
+        <img class = "rounded-circle" src='dist/images/women_avatar1.jpg'>
+      </figure> `);
+      $('#userFriend').append(`
+        <option selected="selected" data-id=${id} data-objId=${_id} > ${name} </option>
+      `);
+    }
+    else {
+      $('#userChosenGroup .avatar' + id).remove();
+    }
+  })
+
+  $('#userChosenGroup .avatar').on('click', function() {
+    alert($(this));
+    
   })
 });
