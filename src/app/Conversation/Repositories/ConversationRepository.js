@@ -27,12 +27,9 @@ class ConversationRepository extends BaseRepository {
     }
 
     async queryGroupChat(user) {
-        console.log(user.id);
-        
         const query = await model.Conversation.find({
             memberId: user.id,
         });
-        console.log(query);
         return query;
     }
 }

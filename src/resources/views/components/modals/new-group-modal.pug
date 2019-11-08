@@ -13,30 +13,35 @@
               label.col-form-label(for='group_name') Group name
               input#group_name.form-control(type='text')
             .form-group
-              label.col-form-label(for='users') Users
-              select#userFriend.w-100.js-example-basic-multiple(name="states[]" multiple="multiple")
+              select#userFriend.hidden(name="states[]" multiple="multiple")
                 each friend in friendInfo
-                  if friend.id == user.id 
-                    option.hidden(selected data-id=friend.id data-objId=friend._id)=friend.name
-                  else
-                    option(data-id=friend.id data-objId=friend._id)=friend.name
-              </select>
-
+                  if friend.id == user.id
+                    option(selected data-id=friend.id data-objId=friend._id)=friend.name
+                  
+              .dropdown
+                button#dropdownMenuButton.btn.btn-outline-secondary.w-100(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+                  | Search here
+                #menuSearchUser.dropdown-menu.w-100(aria-labelledby='dropdownMenuButton')
+                  input#searchUser.form-control(type='text')
+                  #userOption
+                    each friend in friendInfo
+                      if friend.id != user.id
+                        a.dropdown-item(href='#' data-id=friend.id data-objId=friend._id data-name = friend.name)=friend.name
             .form-group
-              .avatar-group
-                figure.avatar
-                  span.avatar-title.bg-success.rounded-circle E
+              .avatar-group#userChosenGroup
+                //- figure.avatar
+                //-   span.avatar-title.bg-success.rounded-circle E
                 figure.avatar
                   img.rounded-circle(src='dist/images/women_avatar1.jpg')
-                figure.avatar
-                  span.avatar-title.bg-danger.rounded-circle S
-                figure.avatar
-                  img.rounded-circle(src='dist/images/man_avatar2.jpg')
-                figure.avatar
-                  span.avatar-title.bg-info.rounded-circle C
-                a(href='#')
-                  figure.avatar
-                    span.avatar-title.bg-primary.rounded-circle +
+                //- figure.avatar
+                //-   span.avatar-title.bg-danger.rounded-circle S
+                //- figure.avatar
+                //-   img.rounded-circle(src='dist/images/man_avatar2.jpg')
+                //- figure.avatar
+                //-   span.avatar-title.bg-info.rounded-circle C
+                //- a(href='#')
+                //-   figure.avatar
+                //-     span.avatar-title.bg-primary.rounded-circle -
             .form-group
               label.col-form-label(for='description') Description
               textarea#description.form-control

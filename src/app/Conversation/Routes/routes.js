@@ -26,4 +26,6 @@ router.post('/upload-profile-image', upload.single('avatar'), controller.callMet
 
 router.post('/createGroup', controller.callMethod('createGroup'));
 
+router.post('/searchUser', controller.callMethod('searchUser'));
+
 export default router;
