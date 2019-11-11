@@ -30,8 +30,6 @@ class AuthService {
   }
 
   async createUserChat(user) {
-    console.log(user);
-    
     const create = await this.repository.createUserChat(user);
     return create;
   }
@@ -69,6 +67,10 @@ class AuthService {
   async queryUser(data) {
     const queryUser = await this.repository.queryUser(data);
     return queryUser;
+  }
+
+  getUserChatId(data) {
+    return this.repository.getUserChatId(data);
   }
 }
 

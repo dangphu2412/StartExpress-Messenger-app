@@ -15,7 +15,7 @@ class FriendController extends BaseController {
     const { user } = req.session;
     const data = req.body;
     const userCheck = await this.authService.checkUserEmail(data);
-    if (userCheck) {
+    if (userCheck && user.email !== data.email) {
       data.friendId = userCheck.id;
       const friendCheck = await this.friendService.checkFriend(user, data);
       if (!friendCheck) {
@@ -33,6 +33,7 @@ class FriendController extends BaseController {
     const { user } = req.session;
     await this.friendService.acceptFriendReq(user, data);
     await this.friendService.acceptFriendRes(user, data);
+    await this.conversationService.createFriendChat(user, data);
     return res.json('success');
   }
 

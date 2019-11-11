@@ -17,20 +17,28 @@ class ConversationController extends BaseController {
 
   async conversation(req, res) {
     const { user } = req.session;
-    const friendList = await this.friendService.friendList(user); // list fr
-    const friendReq = await this.friendService.friendReq(user);   // friend request
-    const member = friendList.map((e) => e.id);  // copy id into member
+    const friendList = await this.friendService.friendList(user);
+    const friendReq = await this.friendService.friendReq(user);
+    const member = friendList.map((e) => e.id);
     member.push(user.id);
-    const friendInfo = await this.authService.friendInfo(member); // query information of user in mongo
+    const friendInfo = await this.authService.friendInfo(member);
     const groupChat = await this.conversationService.groupChat(user);
-    return res.render('app/conversation/index', { friendList, friendReq, friendInfo, groupChat, user });
+    groupChat.forEach((e) => {
+      if (e.name === '') {
+        e.userIds.forEach((ids) => {
+          if (ids._id !== user._id) {
+            e.name = ids.name;
+          }
+        });
+      }
+    });
+    return res.render('app/conversation/index', {
+      friendList, friendReq, friendInfo, groupChat, user,
+    });
   }
 
   uploadImgProfile(req, res) {
     const { file } = req;
-    console.log(file);
-
-    console.log(req.body);
     return res.json(file);
   }
 
@@ -44,6 +52,12 @@ class ConversationController extends BaseController {
     const data = req.body.value;
     const value = await this.authService.queryUser(data);
     return res.json(value);
+  }
+
+  async sendMess(req, res) {
+    const data = req.body; // mess and idChat
+    await this.conversationService.handleMess(data);
+    return res.json('fk');
   }
 }
 

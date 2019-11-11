@@ -6,13 +6,15 @@ import session from 'express-session';
 import mongoose from 'mongoose';
 import http from 'http';
 import socket from './config/socket';
-import model from './database/model';
 // import logger from 'morgan';
 import 'dotenv/config';
 import initRoutes from './config/routes';
 
 const app = express();
 const server = http.createServer(app);
+
+socket(server);
+
 // view engine setup
 app.set('views', path.join(__dirname, 'resources/views'));
 app.set('view engine', 'pug');
@@ -32,9 +34,6 @@ mongoose.connect('mongodb://localhost/mongoDb', { useNewUrlParser: true, useUnif
 // }
 
 // text();
-
-socket(server);
-
 const PgSession = require('connect-pg-simple')(session);
 
 const pgStoreConfig = {

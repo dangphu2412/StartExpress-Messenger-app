@@ -88,7 +88,8 @@ class AuthRepository extends BaseRepository {
   }
 
   async createUserChat(user) {
-    const createMongo = await model.User.create({
+    const createMongo = await model.User
+    .create({
       id: user.id,
       name: user.firstName,
       avatar: user.avatar,
@@ -99,9 +100,18 @@ class AuthRepository extends BaseRepository {
   async queryUser(data) {
     console.log(data);
     const search = await model.User.find({
-        name: { $regex: data },
+        name: { $regex: data, $options: 'i' },
     });
     return search;
+  }
+
+  async getUserChatId(data) {
+    const userId = await model.User
+    .findOne({
+      id: data,
+    })
+    .select('_id');
+    return userId;
   }
 }
 

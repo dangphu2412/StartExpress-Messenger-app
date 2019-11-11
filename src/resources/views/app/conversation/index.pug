@@ -19,7 +19,7 @@ block content
         figure.avatar.avatar-lg
           img.rounded-circle(src='dist/images/man_avatar3.jpg')
         div
-          h5=user.firstName
+          h5#friendName=user.firstName
           small.text-muted
             i Online
       .chat-header-action
@@ -27,7 +27,7 @@ block content
           li.list-inline-item
             a.btn.btn-success(href='#')
               i.fa.fa-phone(aria-hidden='true')
-          li.list-inline-item
+          li.list-inline-item#FakeUser
             a.btn.btn-secondary(href='#')
               i.fa.fa-video-camera(aria-hidden='true')
           li.list-inline-item
@@ -104,7 +104,7 @@ block content
         //-     i.ti-double-check
     .chat-footer
       form(action='')#chatBar
-        input.form-control#chatMess(type='text' placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby='button-addon2')
+        input.form-control#chatMess(type='text' placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby='button-addon2' data-idChat)
         .form-buttons
           button.btn.btn-light.btn-floating(type='button')
             i.fa.fa-paperclip

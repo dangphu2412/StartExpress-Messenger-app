@@ -3,6 +3,7 @@ $(document).ready(function() {
   socket.on('connect', function(data) {
     socket.emit('join','Hello backend');;
   })
+
   socket.on('sendMess', function(msg) {
     if ($.trim(msg)) {
       $('#receivedMes').append(`
@@ -40,21 +41,6 @@ $(document).ready(function() {
     `)
   })
 
-function arrRemove(arr, value) {
-  return arr.filter(function(element) {
-    return element!=value;
-  })
-}
-
-  $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-  })
-
-  $('#chatBar').submit(function(e){
-    e.preventDefault();
-    socket.emit('messages',$('#chatMess').val());
-  });
-
   $('#logout').click(function(event) {      
       event.preventDefault();
       firebase.auth().signOut().then(function() {
@@ -78,10 +64,14 @@ function arrRemove(arr, value) {
       data: body,
       success: function(data) {
         if (data!='sent') {
-          $('#success').css('display','block');
+          $('#addFriends').modal('hide');
         }
         else {
           $('#alert').css('display','block');
+          setTimeout(function() {
+            $('#addFriends').modal('hide');
+            $('#alert').css('display','none');
+          },200);
         }
       }
     })
@@ -168,7 +158,7 @@ function arrRemove(arr, value) {
       data: data,
       url: '/createGroup',
       success: function(data) {
-        (data == 'hello')?$("#newGroup").modal('hide'):alert('Create failed');
+        window.location.href = '/conversations';
       }
     })
   })
@@ -183,14 +173,19 @@ function arrRemove(arr, value) {
         url: '/searchUser',
         success: function(data) {
           if (data) {
-                $('#menuSearchUser > a').each(function() {
+                $('#menuSearchUser > .dropdown-item').each(function() {
                   $(this).remove();
                 });
                 $('#userOption').addClass('hidden');
                 data.forEach((e) => {
                   $('#menuSearchUser').append(`
-                      <a class = "dropdown-item" href='#' data-id= ${e.id} data-objId=${e._id} >${e.name} </a>
-                  `);
+                    <div class="dropdown-item">
+                      <figure class="avatar">
+                        <img class ="rounded-circle" src="dist/images/man_avatar2.jpg">
+                      </figure>
+                      <a href='#' data-id= ${e.id} data-objId=${e._id} data-name=${e.name}> ${e.name} </a>
+                    </div>
+                    `);
                 })
             }
             else {
@@ -201,13 +196,13 @@ function arrRemove(arr, value) {
     }
     else {
       $('#userOption').removeClass('hidden');
-      $('#menuSearchUser > a').each(function() {
+      $('#menuSearchUser > .dropdown-item').each(function() {
         $(this).remove();
       });
     }    
   })
 
-  $('#userOption a').click(function() {
+  $('#menuSearchUser').on('click','a',function() {
     const id = $(this).attr('data-id');
     const _id = $(this).attr('data-objId');
     const name = $(this).attr('data-name');
@@ -219,7 +214,7 @@ function arrRemove(arr, value) {
     })
     if (!check) {
       $('#userChosenGroup').append(`                  
-      <figure class = "avatar" data-toggle="tooltip" data-placement="top" title="${name}" data-id=${id}>
+      <figure class = "avatar del-avatar" data-toggle="tooltip" data-placement="top" title="${name}" data-id=${id}>
         <img class = "rounded-circle" src='dist/images/women_avatar1.jpg'>
       </figure> `);
       $('#userFriend').append(`
@@ -231,8 +226,48 @@ function arrRemove(arr, value) {
     }
   })
 
-  $('#userChosenGroup .avatar').on('click', function() {
-    alert($(this));
-    
+  $('#userChosenGroup ').on('click', '.avatar', function() {
+    const id = $(this).attr('data-id');
+    $('#userFriend option').each(function () {
+      if ($(this).attr('data-id') == id) {
+        $(this).remove();
+      }
+    })
+    $(this).remove();
   })
-});
+
+  $('#FakeUser').click(function() {
+    const firstName = ['','','','','','','',''];
+  });
+
+  $('#listGroup').on('click','.list-group-item', function(event) {
+    event.preventDefault();
+    const idConversation = $(this).attr('data-_id');
+    const name = $(this).attr('data-name');
+    $('.chat .messages .message-item').each(function() {
+      $(this).remove();
+    })
+    $('#friendName').html(() => name);
+    $('#chatMess').attr('data-idChat', () => idConversation);
+    const room = $('#chatMess').attr('data-idChat');
+    console.log(room);
+    socket.emit('joinRoom', room);
+  })
+
+
+  $('.chat-footer').on('submit', '#chatBar', function(e) {
+    e.preventDefault();
+    socket.emit('messages',$('#chatMess').val());
+    const mess = $('#chatMess').val();
+    const idChat = $('#chatMess').attr('data-idChat');
+    $.ajax({
+      type: 'POST',
+      data: { mess, idChat },
+      url: '/sendMess',
+      success: function(data) {
+        console.log(data);
+      }
+    })
+  })
+
+})

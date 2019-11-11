@@ -68,6 +68,8 @@ class AuthController extends BaseController {
     const data = req.body;
     const user = await this.authService.loginEmailCheck(data);
     if (user) {
+        const chatId = await this.authService.getUserChatId(user.id);
+        user._id = chatId._id;
         req.session.user = user;
         req.session.save();
         data.href = '/';
