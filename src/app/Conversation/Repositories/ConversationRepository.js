@@ -22,6 +22,8 @@ class ConversationRepository extends BaseRepository {
             description: data.description,
             userIds: data['_id[]'],
             memberId: data['id[]'],
+            latestMessage: '',
+            latestMember: '',
         });
     return create;
     }
@@ -43,6 +45,8 @@ class ConversationRepository extends BaseRepository {
             description: '',
             userIds: ids,
             memberId: id,
+            latestMessage: '',
+            latestMember: '',
         });
         return createFriendChat;
     }
@@ -55,7 +59,6 @@ class ConversationRepository extends BaseRepository {
             conversationId: data.idChat,
             memberId: data.senderId,
         });
-        console.log(saveMess);
         return saveMess;
     }
 
@@ -66,8 +69,19 @@ class ConversationRepository extends BaseRepository {
         })
         .sort({ updatedAt: 'ascending' })
         .populate('conversationId');
-        console.log(queryMess);
         return queryMess;
+    }
+
+    async updateLatestMess(data) {
+        const update = await model.Conversation
+        .findOneAndUpdate({
+            _id: data.idChat,
+        },
+        {
+            latestMember: data.sender,
+            latestMessage: data.mess,
+        });
+        return update;
     }
 }
 

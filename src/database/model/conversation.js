@@ -10,6 +10,8 @@ const conversationSchema = new Schema({
         ref: 'user',
     }],
     memberId: [Number],
+    latestMessage: String,
+    latestMember: String,
     },
     {
         timestamps: true,

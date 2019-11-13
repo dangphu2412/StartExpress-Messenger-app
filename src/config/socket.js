@@ -12,6 +12,9 @@ function socketConfig(server) {
         socket.on('messSent', (data) => {
             socket.broadcast.to(data.idChat).emit('messReceived', data.mess);
         });
+        socket.on('latestMess', (data) => {
+            socket.broadcast.emit('updateLatestGroup', data);
+        });
     });
 }
 

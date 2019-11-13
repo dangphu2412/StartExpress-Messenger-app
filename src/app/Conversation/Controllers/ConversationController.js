@@ -57,7 +57,8 @@ class ConversationController extends BaseController {
   async sendMess(req, res) {
     const data = req.body;
     await this.conversationService.handleMess(data);
-    return res.json('fk');
+    const update = await this.conversationService.updateLatestMess(data);
+    return res.json(update);
   }
 
   async queryMess(req, res) {

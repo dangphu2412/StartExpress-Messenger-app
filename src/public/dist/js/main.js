@@ -30,6 +30,41 @@ $(document).ready(function() {
     return msg;
   }
 
+  function joinGroup() {
+    const idConversation = $(this).attr('data-_id');
+    const name = $(this).attr('data-name');
+    const sender = $(this).attr('data-sender');
+    const senderId = $(this).attr('data-senderId');
+    $('.chat .messages .message-item').each(function() {
+      $(this).remove();
+    });
+    $.ajax({
+      type: 'POST',
+      data: { idConversation },
+      url: '/queryMess',
+      success: function(data) {
+        data.forEach((messChat) => {
+          (messChat.memberId == senderId)?appendSenderMess(messChat.content):appendReceivedMess(messChat.content);
+        });
+        const location = '/conversations' + "?" + name;
+        history.pushState('', '', location);
+      }
+    })
+    $('#friendName').html(() => name);
+    $('#chatMess').attr('data-idChat', () => idConversation);
+    $('#chatMess').attr('data-sender', () => sender);
+    $('#chatMess').attr('data-senderId', () => senderId);
+    const room = $('#chatMess').attr('data-idChat');
+    socket.emit('joinRoom', room);
+  }
+
+  function flowGroup(idChat) {
+    const group = $('.list-group-item[data-_id="'+idChat+'"]')[0];
+    const groupLatest = $('#listGroup .list-group-item')[0];
+    groupLatest.before(group);
+    return idChat;
+  }
+
   const socket = io('/conversations');
   socket.on('connect', function(data) {
     socket.emit('join','Hello backend');;
@@ -60,6 +95,11 @@ $(document).ready(function() {
         </div> 
       </li>
     `)
+  })
+
+  socket.on('updateLatestGroup', function(idChat) {
+    console.log(idChat);
+    flowGroup(idChat);
   })
 
 // Log out
@@ -271,31 +311,7 @@ $(document).ready(function() {
 // Join group
   $('#listGroup').on('click','.list-group-item', function(event) {
     event.preventDefault();
-    const idConversation = $(this).attr('data-_id');
-    const name = $(this).attr('data-name');
-    const sender = $(this).attr('data-sender');
-    const senderId = $(this).attr('data-senderId');
-    $('.chat .messages .message-item').each(function() {
-      $(this).remove();
-    });
-    $.ajax({
-      type: 'POST',
-      data: { idConversation },
-      url: '/queryMess',
-      success: function(data) {
-        data.forEach((messChat) => {
-          (messChat.memberId == senderId)?appendSenderMess(messChat.content):appendReceivedMess(messChat.content);
-        });
-        const location = '/conversations' + "?" + name;
-        history.pushState('', '', location);
-      }
-    })
-    $('#friendName').html(() => name);
-    $('#chatMess').attr('data-idChat', () => idConversation);
-    $('#chatMess').attr('data-sender', () => sender);
-    $('#chatMess').attr('data-senderId', () => senderId);
-    const room = $('#chatMess').attr('data-idChat');
-    socket.emit('joinRoom', room);
+    joinGroup.call(this);
   })
 
 // Send message
@@ -317,9 +333,14 @@ $(document).ready(function() {
       data,
       url: '/sendMess',
       success: function(data) {
-        console.log(data);
+        flowGroup(idChat);
+        socket.emit('latestMess', idChat);
       }
     })
   })
 
+  setTimeout(function() {
+  const groupLatest = $('#listGroup .list-group-item')[0];
+    joinGroup.call(groupLatest);
+  },200);
 })

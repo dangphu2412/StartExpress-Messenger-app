@@ -45,6 +45,10 @@ class ConversationService {
   queryMess(data) {
     return this.repository.queryMess(data);
   }
+
+  updateLatestMess(data) {
+    return this.repository.updateLatestMess(data);
+  }
 }
 
 export default ConversationService;
