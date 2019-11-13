@@ -17,21 +17,25 @@
                 each friend in friendInfo
                   if friend.id == user.id
                     option(selected data-id=friend.id data-objId=friend._id)=friend.name
-                  
+
               .dropdown
-                button#dropdownMenuButton.btn.btn-outline-secondary.w-100(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
-                  | Search here
+                button#dropdownMenuButton.btn.btn-outline-light.w-100(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
+                  | Search member
                 #menuSearchUser.dropdown-menu.w-100(aria-labelledby='dropdownMenuButton')
                   input#searchUser.form-control(type='text')
                   #userOption
                     each friend in friendInfo
                       if friend.id != user.id
-                        a.dropdown-item(href='#' data-id=friend.id data-objId=friend._id data-name = friend.name)=friend.name
+                        .dropdown-item
+                          figure.avatar
+                            img.rounded-circle(src='dist/images/man_avatar2.jpg')                        
+                          a.w-100(href='#' data-id=friend.id data-objId=friend._id data-name=friend.name)=friend.name
             .form-group
               .avatar-group#userChosenGroup
+                label.pr-2.col-form-label Member
                 //- figure.avatar
                 //-   span.avatar-title.bg-success.rounded-circle E
-                figure.avatar
+                figure.avatar.del-avatar
                   img.rounded-circle(src='dist/images/women_avatar1.jpg')
                 //- figure.avatar
                 //-   span.avatar-title.bg-danger.rounded-circle S

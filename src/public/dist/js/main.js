@@ -1,11 +1,7 @@
 $(document).ready(function() {
-  const socket = io('/conversations');
-  socket.on('connect', function(data) {
-    socket.emit('join','Hello backend');;
-  })
-  socket.on('sendMess', function(msg) {
-    if ($.trim(msg)) {
-      $('#receivedMes').append(`
+
+  function appendReceivedMess(msg) {
+    $('#receivedMes').append(`
       <div class="message-item">
         <div class="message-content">${msg}</div>
         <div class="message-action">NO not socket Pm 14:20</div>
@@ -16,6 +12,32 @@ $(document).ready(function() {
         cursorwidth: "4px",
         cursorborder: '0px'
       }).resize();
+      return msg;
+  }
+
+  function appendSenderMess(msg) {
+    $('#receivedMes').append(`
+    <div class="message-item outgoing-message">
+      <div class="message-content">${msg}</div>
+      <div class="message-action"> Pm 14:20</div>
+    </div>`);
+    const chat_body = $('.layout .content .chat .chat-body');
+    chat_body.scrollTop(chat_body.get(0).scrollHeight, -1).niceScroll({
+      cursorcolor: 'rgba(66, 66, 66, 0.20)',
+      cursorwidth: "4px",
+      cursorborder: '0px'
+    }).resize();
+    return msg;
+  }
+
+  const socket = io('/conversations');
+  socket.on('connect', function(data) {
+    socket.emit('join','Hello backend');;
+  })
+
+  socket.on('messReceived', function(msg) {
+    if ($.trim(msg)) {
+      appendReceivedMess(msg);
     }
   })
   socket.on('sendFriendReq', function(data) {
@@ -40,21 +62,7 @@ $(document).ready(function() {
     `)
   })
 
-function arrRemove(arr, value) {
-  return arr.filter(function(element) {
-    return element!=value;
-  })
-}
-
-  $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-  })
-
-  $('#chatBar').submit(function(e){
-    e.preventDefault();
-    socket.emit('messages',$('#chatMess').val());
-  });
-
+// Log out
   $('#logout').click(function(event) {      
       event.preventDefault();
       firebase.auth().signOut().then(function() {
@@ -64,7 +72,7 @@ function arrRemove(arr, value) {
       })
     })
 
-
+// Send friend request
   $('#addFriend').submit(function(event) {
     event.preventDefault();
     const email = $('input[name="email"]').val();
@@ -78,16 +86,20 @@ function arrRemove(arr, value) {
       data: body,
       success: function(data) {
         if (data!='sent') {
-          $('#success').css('display','block');
+          $('#addFriends').modal('hide');
         }
         else {
           $('#alert').css('display','block');
+          setTimeout(function() {
+            $('#addFriends').modal('hide');
+            $('#alert').css('display','none');
+          },200);
         }
       }
     })
   })
 
-
+// Accept friend reuest
   $('#AcceptReq').click(function(event) {
     event.preventDefault();
     const friendId = $('#AcceptReq').attr('data-id');
@@ -103,7 +115,7 @@ function arrRemove(arr, value) {
     })
   })
 
-
+// Upload profile
   $('#customFile').change(function(e){
     e.stopPropagation();
     e.preventDefault();
@@ -132,7 +144,7 @@ function arrRemove(arr, value) {
     //   event.preventDefault();
   });
 
-
+// Unfriend
   $('#Unfriend').click(function(event) {
     event.preventDefault();
     const friendId = $('#friendId').attr('data-friend');
@@ -149,6 +161,7 @@ function arrRemove(arr, value) {
     })
   })
 
+// Create new group
   $('#newGroup').submit((event) => {
     event.preventDefault();
     const id = []; 
@@ -168,11 +181,12 @@ function arrRemove(arr, value) {
       data: data,
       url: '/createGroup',
       success: function(data) {
-        (data == 'hello')?$("#newGroup").modal('hide'):alert('Create failed');
+        window.location.href = '/conversations';
       }
     })
   })
 
+// Search user to add
   $('#searchUser').keyup(function() {
     const value = $(this).val();
     if ($.trim(value)) {
@@ -183,14 +197,19 @@ function arrRemove(arr, value) {
         url: '/searchUser',
         success: function(data) {
           if (data) {
-                $('#menuSearchUser > a').each(function() {
+                $('#menuSearchUser > .dropdown-item').each(function() {
                   $(this).remove();
                 });
                 $('#userOption').addClass('hidden');
                 data.forEach((e) => {
                   $('#menuSearchUser').append(`
-                      <a class = "dropdown-item" href='#' data-id= ${e.id} data-objId=${e._id} >${e.name} </a>
-                  `);
+                    <div class="dropdown-item">
+                      <figure class="avatar">
+                        <img class ="rounded-circle" src="dist/images/man_avatar2.jpg">
+                      </figure>
+                      <a href='#' data-id= ${e.id} data-objId=${e._id} data-name=${e.name}> ${e.name} </a>
+                    </div>
+                    `);
                 })
             }
             else {
@@ -201,13 +220,14 @@ function arrRemove(arr, value) {
     }
     else {
       $('#userOption').removeClass('hidden');
-      $('#menuSearchUser > a').each(function() {
+      $('#menuSearchUser > .dropdown-item').each(function() {
         $(this).remove();
       });
     }    
   })
 
-  $('#userOption a').click(function() {
+// Choose user to add into group
+  $('#menuSearchUser').on('click','a',function() {
     const id = $(this).attr('data-id');
     const _id = $(this).attr('data-objId');
     const name = $(this).attr('data-name');
@@ -219,7 +239,7 @@ function arrRemove(arr, value) {
     })
     if (!check) {
       $('#userChosenGroup').append(`                  
-      <figure class = "avatar" data-toggle="tooltip" data-placement="top" title="${name}" data-id=${id}>
+      <figure class = "avatar del-avatar" data-toggle="tooltip" data-placement="top" title="${name}" data-id=${id}>
         <img class = "rounded-circle" src='dist/images/women_avatar1.jpg'>
       </figure> `);
       $('#userFriend').append(`
@@ -231,8 +251,75 @@ function arrRemove(arr, value) {
     }
   })
 
-  $('#userChosenGroup .avatar').on('click', function() {
-    alert($(this));
-    
+// Remove user option group
+  $('#userChosenGroup ').on('click', '.avatar', function() {
+    const id = $(this).attr('data-id');
+    $('#userFriend option').each(function () {
+      if ($(this).attr('data-id') == id) {
+        $(this).remove();
+      }
+    })
+    $(this).remove();
   })
-});
+
+
+// Faker
+  $('#FakeUser').click(function() {
+    const firstName = ['','','','','','','',''];
+  });
+
+// Join group
+  $('#listGroup').on('click','.list-group-item', function(event) {
+    event.preventDefault();
+    const idConversation = $(this).attr('data-_id');
+    const name = $(this).attr('data-name');
+    const sender = $(this).attr('data-sender');
+    const senderId = $(this).attr('data-senderId');
+    $('.chat .messages .message-item').each(function() {
+      $(this).remove();
+    });
+    $.ajax({
+      type: 'POST',
+      data: { idConversation },
+      url: '/queryMess',
+      success: function(data) {
+        data.forEach((messChat) => {
+          (messChat.memberId == senderId)?appendSenderMess(messChat.content):appendReceivedMess(messChat.content);
+        });
+        const location = '/conversations' + "?" + name;
+        history.pushState('', '', location);
+      }
+    })
+    $('#friendName').html(() => name);
+    $('#chatMess').attr('data-idChat', () => idConversation);
+    $('#chatMess').attr('data-sender', () => sender);
+    $('#chatMess').attr('data-senderId', () => senderId);
+    const room = $('#chatMess').attr('data-idChat');
+    socket.emit('joinRoom', room);
+  })
+
+// Send message
+  $('.chat-footer').on('submit', '#chatBar', function(e) {
+    e.preventDefault();
+    const mess = $('#chatMess').val();
+    const idChat = $('#chatMess').attr('data-idChat');
+    const sender = $('#chatMess').attr('data-sender');
+    const senderId = $('#chatMess').attr('data-senderId');
+    const data = {
+      mess,
+      idChat,
+      sender,
+      senderId,
+    };
+    socket.emit('messSent', data);
+    $.ajax({
+      type: 'POST',
+      data,
+      url: '/sendMess',
+      success: function(data) {
+        console.log(data);
+      }
+    })
+  })
+
+})

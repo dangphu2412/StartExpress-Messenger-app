@@ -28,4 +28,8 @@ router.post('/createGroup', controller.callMethod('createGroup'));
 
 router.post('/searchUser', controller.callMethod('searchUser'));
 
+router.post('/sendMess', controller.callMethod('sendMess'));
+
+router.post('/queryMess', controller.callMethod('queryMess'));
+
 export default router;

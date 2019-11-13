@@ -21,3 +21,37 @@ body.form-membership {
 .register-option .btn {
   margin-bottom: 15px;
 }
+.dropdown-item:hover {
+  cursor: pointer;
+}
+.dropdown-item:hover a {
+  cursor: pointer;
+}
+.del-avatar {
+  position: relative;
+}
+.del-avatar::before {
+  content: 'x';
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 1px;
+  width: 1px;
+  background: #fff;
+  z-index: 2;
+}
+.del-avatar::after {
+  transform: translate(8px, 6px);
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  border-radius: 50%;
+  width: 30%;
+  height: 30%;
+  background: rgb(182, 182, 182);
+  z-index: 1;
+}
+.del-avatar:hover {
+  cursor: pointer;
+}
