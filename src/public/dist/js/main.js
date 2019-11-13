@@ -1,12 +1,7 @@
 $(document).ready(function() {
-  const socket = io('/conversations');
-  socket.on('connect', function(data) {
-    socket.emit('join','Hello backend');;
-  })
 
-  socket.on('sendMess', function(msg) {
-    if ($.trim(msg)) {
-      $('#receivedMes').append(`
+  function appendReceivedMess(msg) {
+    $('#receivedMes').append(`
       <div class="message-item">
         <div class="message-content">${msg}</div>
         <div class="message-action">NO not socket Pm 14:20</div>
@@ -17,6 +12,32 @@ $(document).ready(function() {
         cursorwidth: "4px",
         cursorborder: '0px'
       }).resize();
+      return msg;
+  }
+
+  function appendSenderMess(msg) {
+    $('#receivedMes').append(`
+    <div class="message-item outgoing-message">
+      <div class="message-content">${msg}</div>
+      <div class="message-action"> Pm 14:20</div>
+    </div>`);
+    const chat_body = $('.layout .content .chat .chat-body');
+    chat_body.scrollTop(chat_body.get(0).scrollHeight, -1).niceScroll({
+      cursorcolor: 'rgba(66, 66, 66, 0.20)',
+      cursorwidth: "4px",
+      cursorborder: '0px'
+    }).resize();
+    return msg;
+  }
+
+  const socket = io('/conversations');
+  socket.on('connect', function(data) {
+    socket.emit('join','Hello backend');;
+  })
+
+  socket.on('messReceived', function(msg) {
+    if ($.trim(msg)) {
+      appendReceivedMess(msg);
     }
   })
   socket.on('sendFriendReq', function(data) {
@@ -41,6 +62,7 @@ $(document).ready(function() {
     `)
   })
 
+// Log out
   $('#logout').click(function(event) {      
       event.preventDefault();
       firebase.auth().signOut().then(function() {
@@ -50,7 +72,7 @@ $(document).ready(function() {
       })
     })
 
-
+// Send friend request
   $('#addFriend').submit(function(event) {
     event.preventDefault();
     const email = $('input[name="email"]').val();
@@ -77,7 +99,7 @@ $(document).ready(function() {
     })
   })
 
-
+// Accept friend reuest
   $('#AcceptReq').click(function(event) {
     event.preventDefault();
     const friendId = $('#AcceptReq').attr('data-id');
@@ -93,7 +115,7 @@ $(document).ready(function() {
     })
   })
 
-
+// Upload profile
   $('#customFile').change(function(e){
     e.stopPropagation();
     e.preventDefault();
@@ -122,7 +144,7 @@ $(document).ready(function() {
     //   event.preventDefault();
   });
 
-
+// Unfriend
   $('#Unfriend').click(function(event) {
     event.preventDefault();
     const friendId = $('#friendId').attr('data-friend');
@@ -139,6 +161,7 @@ $(document).ready(function() {
     })
   })
 
+// Create new group
   $('#newGroup').submit((event) => {
     event.preventDefault();
     const id = []; 
@@ -163,6 +186,7 @@ $(document).ready(function() {
     })
   })
 
+// Search user to add
   $('#searchUser').keyup(function() {
     const value = $(this).val();
     if ($.trim(value)) {
@@ -202,6 +226,7 @@ $(document).ready(function() {
     }    
   })
 
+// Choose user to add into group
   $('#menuSearchUser').on('click','a',function() {
     const id = $(this).attr('data-id');
     const _id = $(this).attr('data-objId');
@@ -226,6 +251,7 @@ $(document).ready(function() {
     }
   })
 
+// Remove user option group
   $('#userChosenGroup ').on('click', '.avatar', function() {
     const id = $(this).attr('data-id');
     $('#userFriend option').each(function () {
@@ -236,33 +262,59 @@ $(document).ready(function() {
     $(this).remove();
   })
 
+
+// Faker
   $('#FakeUser').click(function() {
     const firstName = ['','','','','','','',''];
   });
 
+// Join group
   $('#listGroup').on('click','.list-group-item', function(event) {
     event.preventDefault();
     const idConversation = $(this).attr('data-_id');
     const name = $(this).attr('data-name');
+    const sender = $(this).attr('data-sender');
+    const senderId = $(this).attr('data-senderId');
     $('.chat .messages .message-item').each(function() {
       $(this).remove();
+    });
+    $.ajax({
+      type: 'POST',
+      data: { idConversation },
+      url: '/queryMess',
+      success: function(data) {
+        data.forEach((messChat) => {
+          (messChat.memberId == senderId)?appendSenderMess(messChat.content):appendReceivedMess(messChat.content);
+        });
+        const location = '/conversations' + "?" + name;
+        history.pushState('', '', location);
+      }
     })
     $('#friendName').html(() => name);
     $('#chatMess').attr('data-idChat', () => idConversation);
+    $('#chatMess').attr('data-sender', () => sender);
+    $('#chatMess').attr('data-senderId', () => senderId);
     const room = $('#chatMess').attr('data-idChat');
-    console.log(room);
     socket.emit('joinRoom', room);
   })
 
-
+// Send message
   $('.chat-footer').on('submit', '#chatBar', function(e) {
     e.preventDefault();
-    socket.emit('messages',$('#chatMess').val());
     const mess = $('#chatMess').val();
     const idChat = $('#chatMess').attr('data-idChat');
+    const sender = $('#chatMess').attr('data-sender');
+    const senderId = $('#chatMess').attr('data-senderId');
+    const data = {
+      mess,
+      idChat,
+      sender,
+      senderId,
+    };
+    socket.emit('messSent', data);
     $.ajax({
       type: 'POST',
-      data: { mess, idChat },
+      data,
       url: '/sendMess',
       success: function(data) {
         console.log(data);

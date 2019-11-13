@@ -55,10 +55,17 @@ class ConversationController extends BaseController {
   }
 
   async sendMess(req, res) {
-    const data = req.body; // mess and idChat
+    const data = req.body;
     await this.conversationService.handleMess(data);
     return res.json('fk');
   }
+
+  async queryMess(req, res) {
+    const data = req.body;
+    const chatData = await this.conversationService.queryMess(data);
+    return res.json(chatData);
+  }
+
 }
 
 export default ConversationController;

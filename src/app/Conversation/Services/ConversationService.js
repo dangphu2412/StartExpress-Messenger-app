@@ -38,9 +38,12 @@ class ConversationService {
     return createFriendChat;
   }
 
-  async handleMess(data) {
-    ConversationService.io.to(data.idChat).emit('sendMess', data.mess);
-    return data;
+  handleMess(data) {
+    return this.repository.saveMessChat(data);
+  }
+
+  queryMess(data) {
+    return this.repository.queryMess(data);
   }
 }
 

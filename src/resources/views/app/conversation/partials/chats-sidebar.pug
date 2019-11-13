@@ -25,7 +25,7 @@
                       .users-list-action
                         .new-message-count 2
               each group in groupChat
-                  li.list-group-item(data-_id=group._id data-name=group.name)
+                  li.list-group-item(data-_id=group._id data-name=group.name data-sender=user.firstName data-senderId=user.id)
                     .avatar-group
                       figure.avatar
                         span.avatar-title.bg-warning.bg-success.rounded-circle

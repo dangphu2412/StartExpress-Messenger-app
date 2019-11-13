@@ -46,6 +46,29 @@ class ConversationRepository extends BaseRepository {
         });
         return createFriendChat;
     }
+
+    async saveMessChat(data) {
+        const saveMess = await model.Message
+        .create({
+            content: data.mess,
+            member: data.sender,
+            conversationId: data.idChat,
+            memberId: data.senderId,
+        });
+        console.log(saveMess);
+        return saveMess;
+    }
+
+    async queryMess(data) {
+        const queryMess = await model.Message
+        .find({
+            conversationId: data.idConversation,
+        })
+        .sort({ updatedAt: 'ascending' })
+        .populate('conversationId');
+        console.log(queryMess);
+        return queryMess;
+    }
 }
 
 export default ConversationRepository;

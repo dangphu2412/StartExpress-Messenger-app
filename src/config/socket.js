@@ -6,10 +6,11 @@ function socketConfig(server) {
     const io = socketIo(server);
     Conversation.io = io.of('conversations');
     Conversation.io.on('connection', (socket) => {
-        console.log('GG');
         socket.on('joinRoom', (room) => {
-            console.log(room);
             socket.join(room);
+        });
+        socket.on('messSent', (data) => {
+            socket.broadcast.to(data.idChat).emit('messReceived', data.mess);
         });
     });
 }

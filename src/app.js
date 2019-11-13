@@ -26,14 +26,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 mongoose.connect('mongodb://localhost/mongoDb', { useNewUrlParser: true, useUnifiedTopology: true });
-// Schema
-// async function text() {
-//   await model.Conversation.create({ member: [1, 2] });
-//   const conversation = await model.Conversation.findOne();
-//   console.log(conversation);
-// }
-
-// text();
 const PgSession = require('connect-pg-simple')(session);
 
 const pgStoreConfig = {
