@@ -67,6 +67,7 @@ class ConversationRepository extends BaseRepository {
         .find({
             conversationId: data.idConversation,
         })
+        .lean()
         .sort({ updatedAt: 'ascending' })
         .populate('conversationId');
         return queryMess;

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import BaseController from '../../../infrastructure/Controllers/BaseController';
 import FriendService from '../../Friend/Services/FriendService';
 import AuthService from '../../Auth/Services/AuthService';
@@ -64,9 +65,34 @@ class ConversationController extends BaseController {
   async queryMess(req, res) {
     const data = req.body;
     const chatData = await this.conversationService.queryMess(data);
+    chatData.map((e) => {
+      e.updatedAt = moment.unix(e.updatedAt).format('MMMM Do, h:mm a');
+      return e;
+    });
     return res.json(chatData);
   }
 
+  async loadConversation(req, res) {
+    const { user } = req.session;
+    const friendList = await this.friendService.friendList(user);
+    const friendReq = await this.friendService.friendReq(user);
+    const member = friendList.map((e) => e.id);
+    member.push(user.id);
+    const friendInfo = await this.authService.friendInfo(member);
+    const groupChat = await this.conversationService.groupChat(user);
+    groupChat.forEach((e) => {
+      if (e.name === '') {
+        e.userIds.forEach((ids) => {
+          if (ids._id !== user._id) {
+            e.name = ids.name;
+          }
+        });
+      }
+    });
+    return res.render('app/conversation/index', {
+      friendList, friendReq, friendInfo, groupChat, user,
+    });
+  }
 }
 
 export default ConversationController;

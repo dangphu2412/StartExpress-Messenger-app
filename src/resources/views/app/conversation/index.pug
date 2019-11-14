@@ -17,7 +17,7 @@ block content
     .chat-header
       .chat-header-user
         figure.avatar.avatar-lg
-          img.rounded-circle(src='dist/images/man_avatar3.jpg')
+          img.rounded-circle(src='/dist/images/man_avatar3.jpg')
         div
           h5#friendName=user.firstName
           small.text-muted
@@ -104,7 +104,7 @@ block content
         //-     i.ti-double-check
     .chat-footer
       form(action='')#chatBar
-        input.form-control#chatMess(type='text' placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby='button-addon2' data-idChat data-sender data-senderId)
+        input.form-control#chatMess(type='text' placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby='button-addon2' data-idChat data-sender data-senderId data-userId=user.id)
         .form-buttons
           button.btn.btn-light.btn-floating(type='button')
             i.fa.fa-paperclip
