@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-mongoose.connect('mongodb://localhost/mongoDb', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost/mongoDb', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 const PgSession = require('connect-pg-simple')(session);
 
 const pgStoreConfig = {

@@ -1,10 +1,11 @@
 $(document).ready(function() {
 
-  function appendReceivedMess(msg) {
+  function appendReceivedMess(msg, time, sender) {
     $('#receivedMes').append(`
       <div class="message-item">
+        <div>${sender}</div>
         <div class="message-content">${msg}</div>
-        <div class="message-action">NO not socket Pm 14:20</div>
+        <div class="message-action"> ${time}</div>
       </div>`);
       const chat_body = $('.layout .content .chat .chat-body');
       chat_body.scrollTop(chat_body.get(0).scrollHeight, -1).niceScroll({
@@ -12,14 +13,14 @@ $(document).ready(function() {
         cursorwidth: "4px",
         cursorborder: '0px'
       }).resize();
-      return msg;
+      return msg; 
   }
 
-  function appendSenderMess(msg) {
+  function appendSenderMess(msg, time) {
     $('#receivedMes').append(`
     <div class="message-item outgoing-message">
       <div class="message-content">${msg}</div>
-      <div class="message-action"> Pm 14:20</div>
+      <div class="message-action"> ${time}</div>
     </div>`);
     const chat_body = $('.layout .content .chat .chat-body');
     chat_body.scrollTop(chat_body.get(0).scrollHeight, -1).niceScroll({
@@ -30,16 +31,61 @@ $(document).ready(function() {
     return msg;
   }
 
+  function joinGroup() {
+    const idConversation = $(this).attr('data-_id');
+    const name = $(this).attr('data-name');
+    const sender = $(this).attr('data-sender');
+    const senderId = $(this).attr('data-senderId');
+    $('.list-group-item').each(function() {
+      if($(this).hasClass('open-chat')) {
+        $(this).removeClass('open-chat');
+      }
+    });
+    $(this).addClass('open-chat');
+    $('.chat .messages .message-item').each(function() {
+      $(this).remove();
+    });
+    $.ajax({
+      type: 'POST',
+      data: { idConversation },
+      url: '/queryMess',
+      success: function(data) {
+        data.forEach((messChat) => {
+          (messChat.memberId == senderId)?appendSenderMess(messChat.content, messChat.updatedAt):appendReceivedMess(messChat.content, messChat.updatedAt, messChat.member);
+        });
+        const location = '/conversations' + "/" + name;
+        history.pushState('', '', location);
+      }
+    })
+    $('#friendName').html(() => name);
+    $('#chatMess').attr('data-idChat', () => idConversation);
+    $('#chatMess').attr('data-sender', () => sender);
+    $('#chatMess').attr('data-senderId', () => senderId);
+    const room = $('#chatMess').attr('data-idChat');
+    socket.emit('joinRoom', room);
+  }
+
+  function flowGroup(idChat, mess, sender) {
+    $('.list-group-item[data-_id="'+idChat+'"] .users-list-body p').html(`<p><strong>${sender}: ${mess}</strong> </p>`)
+    const group = $('.list-group-item[data-_id="'+idChat+'"]')[0];
+    const groupLatest = $('#listGroup .list-group-item')[0];
+    groupLatest.before(group);
+    return idChat;
+  }
+
   const socket = io('/conversations');
   socket.on('connect', function(data) {
     socket.emit('join','Hello backend');;
   })
 
-  socket.on('messReceived', function(msg) {
-    if ($.trim(msg)) {
-      appendReceivedMess(msg);
+  socket.on('messReceived', function(data) {
+    const userId = $('#chatMess').attr('data-userId');
+    if ($.trim(data.mess) && (data.userId!=userId)) {
+      const time = 'Just sent';
+      appendReceivedMess(data.mess, time, data.sender);
     }
   })
+
   socket.on('sendFriendReq', function(data) {
     console.log(data[0]);
     $('#friendReqList').append(`
@@ -60,6 +106,10 @@ $(document).ready(function() {
         </div> 
       </li>
     `)
+  })
+
+  socket.on('updateLatestGroup', function(data) {
+    flowGroup(data.idChat, data.mess, data.sender);
   })
 
 // Log out
@@ -271,31 +321,7 @@ $(document).ready(function() {
 // Join group
   $('#listGroup').on('click','.list-group-item', function(event) {
     event.preventDefault();
-    const idConversation = $(this).attr('data-_id');
-    const name = $(this).attr('data-name');
-    const sender = $(this).attr('data-sender');
-    const senderId = $(this).attr('data-senderId');
-    $('.chat .messages .message-item').each(function() {
-      $(this).remove();
-    });
-    $.ajax({
-      type: 'POST',
-      data: { idConversation },
-      url: '/queryMess',
-      success: function(data) {
-        data.forEach((messChat) => {
-          (messChat.memberId == senderId)?appendSenderMess(messChat.content):appendReceivedMess(messChat.content);
-        });
-        const location = '/conversations' + "?" + name;
-        history.pushState('', '', location);
-      }
-    })
-    $('#friendName').html(() => name);
-    $('#chatMess').attr('data-idChat', () => idConversation);
-    $('#chatMess').attr('data-sender', () => sender);
-    $('#chatMess').attr('data-senderId', () => senderId);
-    const room = $('#chatMess').attr('data-idChat');
-    socket.emit('joinRoom', room);
+    joinGroup.call(this);
   })
 
 // Send message
@@ -305,21 +331,38 @@ $(document).ready(function() {
     const idChat = $('#chatMess').attr('data-idChat');
     const sender = $('#chatMess').attr('data-sender');
     const senderId = $('#chatMess').attr('data-senderId');
+    const userId = $('#chatMess').attr('data-userId');
     const data = {
       mess,
       idChat,
       sender,
       senderId,
+      userId,
     };
-    socket.emit('messSent', data);
     $.ajax({
       type: 'POST',
       data,
       url: '/sendMess',
       success: function(data) {
-        console.log(data);
+        flowGroup(idChat, mess, sender);
       }
     })
   })
 
+  setTimeout(function() {
+    let pathName = window.location.pathname;
+    if (pathName!='/conversations') {
+      pathName = pathName.split('/');
+      pathName = pathName[pathName.length-1];
+      $('.list-group-item').each(function() {
+        if ($(this).attr('data-name')==pathName) {
+          joinGroup.call($(this)[0]);
+        }
+      });
+    } 
+    else {
+      const groupLatest = $('#listGroup .list-group-item')[0];
+      joinGroup.call(groupLatest);
+    }
+  },200);
 })

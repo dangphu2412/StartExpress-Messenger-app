@@ -32,4 +32,6 @@ router.post('/sendMess', controller.callMethod('sendMess'));
 
 router.post('/queryMess', controller.callMethod('queryMess'));
 
+router.get('/conversations/:name', controller.callMethod('loadConversation'));
+
 export default router;

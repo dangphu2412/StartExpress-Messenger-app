@@ -32,9 +32,7 @@
                           i.fa.fa-users
                     .users-list-body
                       h5=group.name
-                      p
-                        strong Maher Ruslandi: 
-                        | Hello!!!
+                      p #[strong #{group.latestMember}] : #{group.latestMessage}
                       .users-list-action.action-toggle
                         .dropdown
                           a(data-toggle='dropdown' href='#')

@@ -9,9 +9,6 @@ function socketConfig(server) {
         socket.on('joinRoom', (room) => {
             socket.join(room);
         });
-        socket.on('messSent', (data) => {
-            socket.broadcast.to(data.idChat).emit('messReceived', data.mess);
-        });
     });
 }
 

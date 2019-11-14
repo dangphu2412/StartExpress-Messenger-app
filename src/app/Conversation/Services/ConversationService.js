@@ -39,11 +39,17 @@ class ConversationService {
   }
 
   handleMess(data) {
+    ConversationService.io.emit('messReceived', data);
+    ConversationService.io.emit('updateLatestGroup', data);
     return this.repository.saveMessChat(data);
   }
 
   queryMess(data) {
     return this.repository.queryMess(data);
+  }
+
+  updateLatestMess(data) {
+    return this.repository.updateLatestMess(data);
   }
 }
 
