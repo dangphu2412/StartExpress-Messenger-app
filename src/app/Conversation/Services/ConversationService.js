@@ -39,8 +39,7 @@ class ConversationService {
   }
 
   handleMess(data) {
-    ConversationService.io.emit('messReceived', data);
-    ConversationService.io.emit('updateLatestGroup', data);
+    ConversationService.io.in(data.idChat).emit('messReceived', data);
     return this.repository.saveMessChat(data);
   }
 
