@@ -1,5 +1,6 @@
 window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-  $('#register-phone-number').submit(function (event) {
+  // Register by phone number
+$('#register-phone-number').submit(function (event) {
     event.preventDefault();
     const lastName = $('input[name="lastName"]').val();
     const firstName = $('input[name="firstName"]').val();
@@ -43,6 +44,7 @@ window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-contai
       });
   })
 
+  // register by email address
   $('#register-email').submit(function(event) {
     event.preventDefault();
     const firstName = $('input[name="firstName"]').val();
@@ -81,7 +83,7 @@ window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-contai
     });
   });
 
-
+  // Login by email
   $('#login-form').submit(function(event) {
     event.preventDefault();
     const email = $('input[name="email"]').val();
@@ -117,6 +119,7 @@ window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-contai
     });
   });
 
+  // Login by phonenumber
   $('#login-phone-number').submit(function (event) {
       event.preventDefault();
       const phoneNumber = $('input[name="phoneNumber"]').val();

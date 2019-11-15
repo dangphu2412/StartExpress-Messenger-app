@@ -39,7 +39,7 @@ class ConversationController extends BaseController {
   }
 
   uploadImgProfile(req, res) {
-    const { file } = req;
+    const file = req.body;
     return res.json(file);
   }
 

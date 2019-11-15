@@ -22,7 +22,9 @@ router.get('/', authenUser.verifyAuth, controller.callMethod('redirectCoreView')
 
 router.get('/conversations', authenUser.verifyAuth, controller.callMethod('conversation'));
 
-router.post('/upload-profile-image', upload.single('avatar'), controller.callMethod('uploadImgProfile'));
+router.get('/conversations/:name', authenUser.verifyAuth, controller.callMethod('loadConversation'));
+
+router.post('/upload-profile-image', controller.callMethod('uploadImgProfile'));
 
 router.post('/createGroup', controller.callMethod('createGroup'));
 
@@ -31,7 +33,5 @@ router.post('/searchUser', controller.callMethod('searchUser'));
 router.post('/sendMess', controller.callMethod('sendMess'));
 
 router.post('/queryMess', controller.callMethod('queryMess'));
-
-router.get('/conversations/:name', controller.callMethod('loadConversation'));
 
 export default router;

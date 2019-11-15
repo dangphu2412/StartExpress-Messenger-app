@@ -80,6 +80,7 @@ $(document).ready(function() {
 
   socket.on('messReceived', function(data) {
     const userId = $('#chatMess').attr('data-userId');
+    flowGroup(data.idChat, data.mess, data.sender);
     if ($.trim(data.mess) && (data.userId!=userId)) {
       const time = 'Just sent';
       appendReceivedMess(data.mess, time, data.sender);
@@ -108,9 +109,6 @@ $(document).ready(function() {
     `)
   })
 
-  socket.on('updateLatestGroup', function(data) {
-    flowGroup(data.idChat, data.mess, data.sender);
-  })
 
 // Log out
   $('#logout').click(function(event) {      
@@ -167,14 +165,12 @@ $(document).ready(function() {
 
 // Upload profile
   $('#customFile').change(function(e){
-    e.stopPropagation();
     e.preventDefault();
     const reader = new FileReader();
     const file = e.target.files[0];
     reader.onload = function(progressEvent) {
       const url = reader.result;
       console.log(url);
-      
       const fd = new FormData();
       fd.append('avatar',url);
         $.ajax({

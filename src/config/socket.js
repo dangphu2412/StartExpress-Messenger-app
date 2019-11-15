@@ -7,6 +7,8 @@ function socketConfig(server) {
     Conversation.io = io.of('conversations');
     Conversation.io.on('connection', (socket) => {
         socket.on('joinRoom', (room) => {
+            console.log(room);
+            
             socket.join(room);
         });
     });
