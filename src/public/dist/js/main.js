@@ -36,6 +36,7 @@ $(document).ready(function() {
     const name = $(this).attr('data-name');
     const sender = $(this).attr('data-sender');
     const senderId = $(this).attr('data-senderId');
+    const roomId = $('#chatMess').attr('data-idChat');
     $('.list-group-item').each(function() {
       if($(this).hasClass('open-chat')) {
         $(this).removeClass('open-chat');
@@ -56,13 +57,17 @@ $(document).ready(function() {
         const location = '/conversations' + "/" + name;
         history.pushState('', '', location);
       }
-    })
+    });
+    if (roomId == 'data-idChat') {
+      socket.emit('joinRoom', idConversation);
+    }
+    else {
+      socket.emit('leaveThenJoinRoom', roomId, idConversation);
+    }
     $('#friendName').html(() => name);
     $('#chatMess').attr('data-idChat', () => idConversation);
     $('#chatMess').attr('data-sender', () => sender);
     $('#chatMess').attr('data-senderId', () => senderId);
-    const room = $('#chatMess').attr('data-idChat');
-    socket.emit('joinRoom', room);
   }
 
   function flowGroup(idChat, mess, sender) {
@@ -339,7 +344,7 @@ $(document).ready(function() {
       type: 'POST',
       data,
       url: '/sendMess',
-      success: function(data) {
+      success: function(value) {
         flowGroup(idChat, mess, sender);
       }
     })
