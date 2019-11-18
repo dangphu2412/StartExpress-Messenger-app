@@ -30,10 +30,10 @@ $(function () {
     //     ChatosExamle.Message.add();
     // }, 1000);
 
-    setTimeout(function () {
-        // $('#disconnected').modal('show');
-        $('#call').modal('show');
-    }, 2000);
+    // setTimeout(function () {
+    //     // $('#disconnected').modal('show');
+    //     $('#call').modal('show');
+    // }, 2000);
 
     $(document).on('submit', '.layout .content .chat .chat-footer form', function (e) {
         e.preventDefault();
