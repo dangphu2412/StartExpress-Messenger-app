@@ -73,6 +73,14 @@ class ConversationRepository extends BaseRepository {
         return queryMess;
     }
 
+    async queryMemberIds(data) {
+        const memberIds = await model.Conversation
+        .findById(data)
+        .populate('userIds')
+        .select('userIds');
+        return memberIds;
+    }
+
     async updateLatestMess(data) {
         const update = await model.Conversation
         .findOneAndUpdate({
