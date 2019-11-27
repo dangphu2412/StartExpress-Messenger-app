@@ -6,6 +6,8 @@ class ConversationService {
 
   static io;
 
+  static ioNotify;
+
   constructor() {
     this.repository = Repository.getRepository();
     this.authRepository = AuthRepository.getRepository();
@@ -38,8 +40,13 @@ class ConversationService {
     return createFriendChat;
   }
 
-  handleMess(data) {
+  async handleMess(data) {
     ConversationService.io.in(data.idChat).emit('messReceived', data);
+    const memberIds = await this.repository.queryMemberIds(data.idChat);
+    memberIds.userIds.map((e) => {
+      ConversationService.ioNotify.in(e._id).emit('notifyMess', data);
+      return e;
+    });
     return this.repository.saveMessChat(data);
   }
 

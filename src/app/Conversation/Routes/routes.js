@@ -22,7 +22,7 @@ router.get('/', authenUser.verifyAuth, controller.callMethod('redirectCoreView')
 
 router.get('/conversations', authenUser.verifyAuth, controller.callMethod('conversation'));
 
-router.get('/conversations/:name', authenUser.verifyAuth, controller.callMethod('loadConversation'));
+router.get('/conversations/t/:id', authenUser.verifyAuth, controller.callMethod('loadConversation'));
 
 router.post('/upload-profile-image', controller.callMethod('uploadImgProfile'));
 

@@ -1,4 +1,25 @@
 $(document).ready(function() {
+  const messaging = firebase.messaging();
+  messaging.usePublicVapidKey("BJhhpIbMxDQnOeuqv2GyrQ9AEyK7G3ZmodY2oBqQ6A8UZQAZef8O3TQHVQmip_RIVQ1nVezIuAbgFSFwyWAMNqc");
+  Notification.requestPermission().then((permission) => {
+    if (permission === 'granted') {
+      console.log('Notification permission granted.');
+      messaging.getToken().then((currentToken) => {
+        if (currentToken) {
+          console.log(currentToken);
+        } else {
+          console.log('Ko co token');
+        }
+      }).catch((err) => {
+        console.log('An error occurred while retrieving token. ', err);
+      });
+    } else {
+      console.log('Unable to get permission to notify.');
+    }
+  });
+  messaging.onMessage((payload) => {
+    console.log('Message received. ', payload);
+  });
 
   function appendReceivedMess(msg, time, sender) {
     $('#receivedMes').append(`
@@ -54,7 +75,7 @@ $(document).ready(function() {
         data.forEach((messChat) => {
           (messChat.memberId == senderId)?appendSenderMess(messChat.content, messChat.updatedAt):appendReceivedMess(messChat.content, messChat.updatedAt, messChat.member);
         });
-        const location = '/conversations' + "/" + name;
+        const location = '/conversations' + '/t/' + idConversation;
         history.pushState('', '', location);
       }
     });
@@ -71,7 +92,7 @@ $(document).ready(function() {
   }
 
   function flowGroup(idChat, mess, sender) {
-    $('.list-group-item[data-_id="'+idChat+'"] .users-list-body p').html(`<p><strong>${sender}: ${mess}</strong> </p>`)
+    $('.list-group-item[data-_id="'+idChat+'"] .users-list-body p').html(`<strong style="color: black">${sender}: ${mess}</strong>`);
     const group = $('.list-group-item[data-_id="'+idChat+'"]')[0];
     const groupLatest = $('#listGroup .list-group-item')[0];
     groupLatest.before(group);
@@ -79,6 +100,7 @@ $(document).ready(function() {
   }
 
   const socket = io('/conversations');
+  const socketNotify = io('/notifications');
   socket.on('connect', function(data) {
     socket.emit('join','Hello backend');;
   })
@@ -112,6 +134,11 @@ $(document).ready(function() {
         </div> 
       </li>
     `)
+  })
+
+  socketNotify.on('notifyMess', function(data) {
+    console.log(data);
+    flowGroup(data.idChat, data.mess, data.sender);
   })
 
 
@@ -351,6 +378,8 @@ $(document).ready(function() {
   })
 
   setTimeout(function() {
+    const userId = $('#chatMess').attr('data-userIds');
+    socketNotify.emit('joinOwnGroup', userId);
     let pathName = window.location.pathname;
     if (pathName!='/conversations') {
       pathName = pathName.split('/');
