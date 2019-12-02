@@ -25,11 +25,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-mongoose.connect('mongodb://localhost/mongoDb', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
+mongoose.connect(process.env.DATABASEMONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 const PgSession = require('connect-pg-simple')(session);
 
 const pgStoreConfig = {
-  conString: 'postgres://postgres:241299@localhost:5432/mess_app',
+  conString: process.env.DATABASE_URL,
 };
 app.use(session({
   store: new PgSession(pgStoreConfig),
