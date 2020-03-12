@@ -1,25 +1,4 @@
 $(document).ready(function() {
-  const messaging = firebase.messaging();
-  messaging.usePublicVapidKey("BJhhpIbMxDQnOeuqv2GyrQ9AEyK7G3ZmodY2oBqQ6A8UZQAZef8O3TQHVQmip_RIVQ1nVezIuAbgFSFwyWAMNqc");
-  Notification.requestPermission().then((permission) => {
-    if (permission === 'granted') {
-      console.log('Notification permission granted.');
-      messaging.getToken().then((currentToken) => {
-        if (currentToken) {
-          console.log(currentToken);
-        } else {
-          console.log('Ko co token');
-        }
-      }).catch((err) => {
-        console.log('An error occurred while retrieving token. ', err);
-      });
-    } else {
-      console.log('Unable to get permission to notify.');
-    }
-  });
-  messaging.onMessage((payload) => {
-    console.log('Message received. ', payload);
-  });
 
   function appendReceivedMess(msg, time, sender) {
     $('#receivedMes').append(`

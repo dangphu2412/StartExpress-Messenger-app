@@ -78,8 +78,12 @@ class ConversationController extends BaseController {
     const friendReq = await this.friendService.friendReq(user);
     const member = friendList.map((e) => e.id);
     member.push(user.id);
-    const friendInfo = await this.authService.friendInfo(member);
-    const groupChat = await this.conversationService.groupChat(user);
+    const [friendInfo, groupChat] = await Promise.all(
+        this.authService.friendInfo(member),
+        this.conversationService.groupChat(user),
+    );
+    // const friendInfo = await this.authService.friendInfo(member);
+    // const groupChat = await this.conversationService.groupChat(user);
     groupChat.forEach((e) => {
       if (e.name === '') {
         e.userIds.forEach((ids) => {

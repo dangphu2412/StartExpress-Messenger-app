@@ -8,7 +8,7 @@ module.exports = {
     client: process.env.DB_CONNECTION,
     connection: { 
       host: '127.0.0.1',
-      user: 'postgres', 
+      user: 'postgres',
       database: 'mess_app',
       port: '5432',
       password: '241299'
@@ -19,12 +19,12 @@ module.exports = {
     seeds: {
       directory: path.join(BASE_PATH, 'seeds'),
     }
-  }, 
+  },
   production: { 
     client: process.env.DB_CONNECTION,
     connection: { 
-      user: 'postgres', 
-      database: 'mess_app' 
+      user: 'postgres',
+      database: 'mess_app'
     },
     migrations: {
       directory: path.join(__dirname, BASE_PATH, 'migrations'),
@@ -38,4 +38,3 @@ module.exports = {
     },
   },
 };
-
