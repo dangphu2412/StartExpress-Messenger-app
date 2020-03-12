@@ -53,7 +53,7 @@ class AuthRepository extends BaseRepository {
     });
   }
 
-  loginEmailCheck(data) {
+  loginByEmail(data) {
     return this.getBy({
       email: data.email,
       password: data.password,
@@ -87,8 +87,8 @@ class AuthRepository extends BaseRepository {
     return query;
   }
 
-  async createUserChat(user) {
-    const createMongo = await model.User
+  createUserChat(user) {
+    const createMongo = model.User
     .create({
       id: user.id,
       name: user.firstName,

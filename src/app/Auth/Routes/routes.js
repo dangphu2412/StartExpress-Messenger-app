@@ -12,13 +12,7 @@ router.route('/register-phone-number')
     .get(authenUser.verifyNotAuth, controller.callMethod('registerByPhoneNumber'))
     .post(authenUser.verifyNotAuth, controller.callMethod('registerByPhoneNumberPost'));
 
-router.route('/register-email')
-    .get(authenUser.verifyNotAuth, controller.callMethod('registerByEmail'))
-    .post(authenUser.verifyNotAuth, controller.callMethod('registerByEmailPost'));
 
-router.route('/login-email')
-    .get(authenUser.verifyNotAuth, controller.callMethod('loginEmail'))
-    .post(authenUser.verifyNotAuth, controller.callMethod('loginEmailPost'));
 
 router.route('/login-phone-number')
     .get(authenUser.verifyNotAuth, controller.callMethod('loginPhoneNumber'))
@@ -29,5 +23,14 @@ router.get('/login', authenUser.verifyNotAuth, controller.callMethod('login'));
 router.get('/reset-password', controller.callMethod('resetPassword'));
 
 router.get('/logout', controller.callMethod('logout'));
+
+// Page call
+router.get(('/register-email'), authenUser.verifyNotAuth, controller.callMethod('registerEmailPage'));
+router.get('/login-email', authenUser.verifyNotAuth, controller.callMethod('loginEmailPage'));
+
+// Api call
+router.post('/api/register-email', authenUser.verifyNotAuth, controller.callMethod('registerByEmail'));
+router.post('/api/login-email', authenUser.verifyNotAuth, controller.callMethod('loginByEmail'));
+
 
 export default router;

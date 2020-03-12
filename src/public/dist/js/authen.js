@@ -45,78 +45,81 @@ $('#register-phone-number').submit(function (event) {
   })
 
   // register by email address
-  $('#register-email').submit(function(event) {
+  $('#register-email').submit(async function(event) {
     event.preventDefault();
-    const firstName = $('input[name="firstName"]').val();
-    const lastName = $('input[name="lastName"]').val();
-    const email = $('input[name="email"]').val();
-    const password = $('input[name="password"]').val();
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(function(){
-        const user = firebase.auth().currentUser;
-        user.sendEmailVerification();
-        window.localStorage.setItem('emailForSignIn', email);
-        const body = {
+    const firstName = $('input[name="firstName"]').val(),
+          lastName  = $('input[name="lastName"]').val(),
+          email     = $('input[name="email"]').val(),
+          password  = $('input[name="password"]').val();
+
+    const data = {
           firstName,
           lastName,
           email,
           password,
+    }
+    try {
+      await firebase.auth().createUserWithEmailAndPassword(email, password);
+
+      const user = firebase.auth().currentUser;
+      user.sendEmailVerification();
+      window.localStorage.setItem('emailForSignIn', email);
+
+      $.ajax({
+        type: 'POST',
+        url: '/api/register-email',
+        data: data,
+        success: function (result, status, xhr) { 
+            $('#block-register').remove();
+            $('#verify-email').css('display','block');
+            setTimeout(function() {
+              // Reload the pages
+              window.location.href = '/login-email';
+            }, 3000);
+        },
+        error: function (xhr, status, error) {
+          event.preventDefault();
+          $('#alertRegister').css('display','block');
         }
-        $.ajax({
-          type: 'POST',
-          url: '/register-email',
-          data: body,
-          success: function (data) {            
-            if (data.success) {
-              $('#block-register').remove();
-              $('#verify-email').css('display','block');
-            }
-            else {
-              window.location.href = '/register-email';
-            }
-          }
-        })
-      })  
-    .catch(function(error) {
+      }) 
+
+    } catch (error) {
       event.preventDefault();
       $('#alertRegister').css('display','block');
-    });
+    }
   });
 
   // Login by email
-  $('#login-form').submit(function(event) {
+  $('#login-form').submit(async function(event) {
     event.preventDefault();
-    const email = $('input[name="email"]').val();
-    const password = $('input[name="password"]').val(); 
-    firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
+    const email = $('input[name="email"]').val(),
+          password = $('input[name="password"]').val(); 
+
+    const data = {
+      email,
+      password
+    }
+    try {
+      await firebase.auth().signInWithEmailAndPassword(email, password);
       const user = firebase.auth().currentUser;
       if (user.emailVerified) {
-        console.log(user);
-          const body = {
-            email,
-            password
-          }
           $.ajax({
             type: 'POST',
-            url: '/login-email',
-            data: body,
-            success: function (data) {            
-              if (data.href) {
-                window.location.href = `${data.href}`;
-              }
-              else {
-                event.preventDefault();
-                $('#alertLogin').css('display','block');
-              }
+            url: '/api/login-email',
+            data: data,
+            success: function (xhr) {            
+                window.location.href = '/';
+            },
+            error: function (error) {
+              event.preventDefault();
+              $('#alertLogin').css('display','block');
             }
           })
-      } 
-      else {
-        console.log(user.emailVerified);
-        event.preventDefault();
-        $('#alertverifyLogin').css('display','block');
       }
-    });
+    } catch (error) {
+      event.preventDefault();
+      $('#alertverifyLogin').css('display','block');
+    }
   });
 
   // Login by phonenumber
