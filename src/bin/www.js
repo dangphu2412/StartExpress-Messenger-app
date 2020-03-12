@@ -22,7 +22,9 @@ config.app.set('port', port);
 /**
  * Listen on provided port, on all network interfaces.
  */
-config.server.listen(port);
+config.server.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
 config.server.on('error', onError);
 config.server.on('listening', onListening);
 

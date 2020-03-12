@@ -34,8 +34,8 @@ class AuthController extends BaseController {
 
   async registerByPhoneNumberPost(req, res) {
     const data = req.body;
-    admin.auth().verifyIdToken(data.idToken).then(async (decodedToken) => {
-      const { uid } = decodedToken;
+    try {
+      const { uid } = await admin.auth().verifyIdToken(data.idToken);
       if (uid) {
         const userCheck = await this.authService.checkUserPhone(data);
         if (userCheck) {
@@ -46,10 +46,9 @@ class AuthController extends BaseController {
         data.success = true;
         return res.json(data);
       }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    } catch (error) {
+      return res.status(402).send('Your admin has been fault');
+    }
   }
 
   resetPassword(req, res) {
@@ -84,8 +83,7 @@ class AuthController extends BaseController {
 
   async loginPhoneNumberPost(req, res) {
     const data = req.body;
-    admin.auth().verifyIdToken(data.idToken).then(async (decodedToken) => {
-      const { uid } = decodedToken;
+      const { uid } = await admin.auth().verifyIdToken(data.idToken);
       if (uid) {
         const userCheck = await this.authService.registerPhoneCheck;
         if (userCheck) {
@@ -95,7 +93,6 @@ class AuthController extends BaseController {
         }
         return res.json(data);
       }
-    });
   }
 
   logout(req, res) {
