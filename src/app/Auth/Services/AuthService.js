@@ -39,8 +39,8 @@ class AuthService {
     return registerByPhoneNumberPost;
   }
 
-  async loginByEmail(data) {
-    const loginData = await this.repository.loginByEmail(data);
+ loginByEmail(data) {
+    const loginData = this.repository.loginByEmail(data);
     return loginData;
   }
 

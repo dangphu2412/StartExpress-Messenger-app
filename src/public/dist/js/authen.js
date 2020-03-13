@@ -1,47 +1,53 @@
 window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
   // Register by phone number
-$('#register-phone-number').submit(function (event) {
-    event.preventDefault();
-    const lastName = $('input[name="lastName"]').val();
-    const firstName = $('input[name="firstName"]').val();
-    const phoneNumber = $('input[name="phoneNumber"]').val();
-    const appVerifier = window.recaptchaVerifier;
-    firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-      .then(function (confirmationResult) {
-        window.confirmationResult = confirmationResult;
-        $('#register-phone-step1').remove();
-        $('#register-phone-step2').css('display', 'block');
-        $('#register-number-verify').submit(function (event) {
-          event.preventDefault();
-          const code = $('input[name="code"]').val();
-          confirmationResult.confirm(code).then(function (result) {
-            firebase.auth().currentUser.getIdToken(true).then(function (idToken) {
-              const user = result.user;
-              console.log(user);
-              const body = {
-                lastName,
-                firstName,
-                phoneNumber,
-                idToken
-              }
-              console.log(body);
-              $.ajax({
-                type: "POST",
-                url: "/register-phone-number",
-                data: body,
-                success: function(data) {
-                  if (data.success) {
-                    window.location.href = '/login-phone-number';
-                  }
-                  else {
-                    $('#alert').css('display','block');
-                  }
-                }
-              })
-            })            
-          });
-        });
-      });
+  $('#register-phone-number').submit(async function (event) {
+    try {
+      event.preventDefault();
+      const lastName = $('input[name="lastName"]').val(),
+            firstName = $('input[name="firstName"]').val(),
+            phoneNumber = $('input[name="phoneNumber"]').val();
+  
+      const appVerifier = window.recaptchaVerifier;
+  
+      const confirmationResult = await firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier);
+  
+      window.confirmationResult = confirmationResult;
+  
+      $('#register-phone-step1').remove();
+      $('#register-phone-step2').css('display', 'block');
+  
+      $('#register-number-verify').submit(async function (event) {
+        event.preventDefault();
+        const code = $('input[name="code"]').val();
+        await confirmationResult.confirm(code);
+  
+        const idToken = await firebase.auth().currentUser.getIdToken(true);
+        
+        const body = {
+          lastName,
+          firstName,
+          phoneNumber,
+          idToken
+        }
+  
+        $.ajax({
+          type: "POST",
+          url: "/api/register-phone-number",
+          data: body,
+          success: function(xhr) {
+            if (xhr.status === 201) {
+              window.location.href = '/login-phone-number';
+            }
+          },
+          error: function(xhr) {
+              $('#alert').css('display','block');
+          }
+        })
+      });  
+    } 
+    catch (error) {
+      $('#alert').css('display','block');
+    }
   })
 
   // register by email address
@@ -107,10 +113,12 @@ $('#register-phone-number').submit(function (event) {
             type: 'POST',
             url: '/api/login-email',
             data: data,
-            success: function (xhr) {            
+            success: function (xhr,status) {
+                localStorage.setItem('token', JSON.stringify(xhr.token));   
                 window.location.href = '/';
             },
             error: function (error) {
+              console.log(error);
               event.preventDefault();
               $('#alertLogin').css('display','block');
             }
@@ -123,45 +131,50 @@ $('#register-phone-number').submit(function (event) {
   });
 
   // Login by phonenumber
-  $('#login-phone-number').submit(function (event) {
+  $('#login-phone-number').submit(async function (event) {
+    try {
       event.preventDefault();
+
       const phoneNumber = $('input[name="phoneNumber"]').val();
       const appVerifier = window.recaptchaVerifier;
-      firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-        .then(function (confirmationResult) {
-          window.confirmationResult = confirmationResult;
-          $('#login-phone-step1').remove();
-          $('#login-phone-step2').css('display', 'block');
-          $('#login-number-verify').submit(function (event) {
-            event.preventDefault();
-            const codeLoginPhone = $('input[name="codeLoginPhone"]').val();          
-            confirmationResult.confirm(codeLoginPhone).then(function (result) {
-              firebase.auth().currentUser.getIdToken(true).then(function (idToken) {
-                console.log(idToken);
-                const body = {
-                  phoneNumber,
-                  idToken
-                }
-                console.log(body);
-                $.ajax({
-                  type: "POST",
-                  url: "/login-phone-number",
-                  data: body,
-                  success: function(data) {
-                    console.log(data);
-                    if (data.success) {
-                      window.location.href = '/';
-                    }
-                    else {
-                      $('#alertauthenLogin').css('display','block');
-                    }
-                  }
-                })
-              })            
-            }).catch((error) => {
-              window.location.reload();
-              console.log(error);
-            });
-          })
+      
+      const confirmationResult = await firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier);
+
+      window.confirmationResult = confirmationResult;
+
+      $('#login-phone-step1').remove();
+      $('#login-phone-step2').css('display', 'block');
+
+      $('#login-number-verify').submit(async function (event) {
+        event.preventDefault();
+
+        const codeLoginPhone = $('input[name="codeLoginPhone"]').val(); 
+
+        await confirmationResult.confirm(codeLoginPhone);
+
+        const idToken = await firebase.auth().currentUser.getIdToken(true);
+            
+        const body = {
+          phoneNumber,
+          idToken
+        }
+
+        $.ajax({
+          type: "POST",
+          url: "/api/login-phone-number",
+          data: body,
+          success: function(xhr) {
+            if (xhr.status === 201) {
+              window.location.href = '/';
+            }
+          },
+          error: function(xhr) {
+              $('#alertauthenLogin').css('display','block');
+          }
+        });          
       });
-    })
+    }
+    catch (error) {
+      window.location.reload();
+    }
+  });
