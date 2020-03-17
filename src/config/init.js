@@ -15,7 +15,7 @@ export default function (app) {
     app.use(logger('dev'));
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
-    app.use(cookieParser());
+    app.use(cookieParser(process.env.COOKIE_KEY));
     app.use(express.static(path.join(__dirname, '../public')));
 
     app.use(methodOverride('X-HTTP-Method-Override'));

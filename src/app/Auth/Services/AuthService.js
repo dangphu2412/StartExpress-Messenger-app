@@ -15,8 +15,7 @@ class AuthService {
   }
 
   checkUserEmail(data) {
-    const checkUserEmail = this.repository.checkUserEmail(data);
-    return checkUserEmail;
+    return this.repository.checkUserEmail(data);
   }
 
   async checkUserPhone(data) {
@@ -24,9 +23,8 @@ class AuthService {
     return checkUserPhone;
   }
 
-  registerByEmailPost(data) {
-    const registerByEmailPost = this.repository.registerUserEmail(data);
-    return registerByEmailPost;
+  registerByEmail(data) {
+    return this.repository.registerUserEmail(data);
   }
 
   async createUserChat(user) {
@@ -40,8 +38,7 @@ class AuthService {
   }
 
  loginByEmail(data) {
-    const loginData = this.repository.loginByEmail(data);
-    return loginData;
+    return this.repository.loginByEmail(data);
   }
 
   async friendInfor() {

@@ -6,21 +6,21 @@ block content
 
     form#register-email
       .form-group.input-group-lg
-        input.form-control(type='text' name='firstName' placeholder='firstname' required='' autofocus='')
+        input.form-control(type='text' name='firstName' placeholder='firstname' required='true' autofocus='')
       .form-group.input-group-lg
-        input.form-control(type='text' name='lastName' placeholder='lastname' required='')
+        input.form-control(type='text' name='lastName' placeholder='lastname' required='true')
       .form-group.input-group-lg
-        input.form-control(type='email' name='email' placeholder='email' required='')
+        input.form-control(type='email' name='email' placeholder='email' required='true')
       .form-group.input-group-lg
-        input.form-control(type='password' name='password' placeholder='password' required='')
-      #alertRegister.pb-3.hidden Your email has been created !
+        input.form-control(type='password' name='password' placeholder='password' required='true')
+      #alertRegister.pb-3.hidden Your email has been used !
       button.btn.btn-primary.btn-lg.btn-block Register
       #recaptcha-container
       hr
 
   div#verify-email.hidden
     h5 Verify account
-      h3 Verifying your account by email!
+      h3 Go to your email and verify it!
       hr
   
   p.text-muted Already have an account?

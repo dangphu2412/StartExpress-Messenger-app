@@ -114,7 +114,6 @@ window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-contai
             url: '/api/login-email',
             data: data,
             success: function (xhr,status) {
-                localStorage.setItem('token', JSON.stringify(xhr.token));   
                 window.location.href = '/';
             },
             error: function (error) {

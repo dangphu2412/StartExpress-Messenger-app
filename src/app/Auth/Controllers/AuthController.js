@@ -46,14 +46,22 @@ class AuthController extends BaseController {
   async registerByEmail(req, res) {
     try {
       const data = req.body;
-      const hasUser = await this.authService.checkUserEmail(data);
+      const userEmail = data.email;
+      const userName = `${data.firstName} ${data.lastName}`;
+
+      const hasUser = await this.authService.checkUserEmail(userEmail);
       if (hasUser) {
         return res.status(409).json({
           message: 'This account has already existed'
         });
       }
-      const user = await this.authService.registerByEmailPost(data);
-      await this.authService.createUserChat(user[0]);
+
+      const userData = (await this.authService.registerByEmail(data))[0];
+      // Insert name into userData object
+      userData.name = userName;
+
+      await this.authService.createUserChat(userData);
+
       return res.status(201).json({
         message: 'Create successfully'
       });
@@ -88,32 +96,36 @@ class AuthController extends BaseController {
   async loginByEmail(req, res) {
     try {
       const data = req.body;
-      const user = await this.authService.loginByEmail(data);
+      const cookieOptions = {
+        maxAge: process.env.COOKIE_EXPIRES,
+        httpOnly: true
+      };
 
-      if (user) {
-          const chatId = await this.authService.getUserChatId(user.id);
+      const hasUser = (await this.authService.loginByEmail(data))[0];
 
-          user._id = chatId._id;
+      if (hasUser) {
+        const user = {
+          _id: hasUser._id,
+          name: hasUser.name,
+        };
 
-          const token = jwt.sign(user, process.env.ACCESS_TOKEN_KEY);
-
-          req.session.user = user;
-          req.session.save();
-          return res.status(201).json({
-            message: 'Login success',
-            token
-          });
+        const token = jwt.sign(user, process.env.ACCESS_TOKEN_KEY);
+        // Set cookie contain token
+        res.cookie('token', token, cookieOptions);
+        return res.status(200).json({
+          message: 'Login success',
+        });
       }
 
-      return res.status(400).json({
+      return res.status(403).json({
         message: 'Login failed'
       });
-  }
-  catch (error) {
-      return res.status(403).json({
-        message: error.message
-      });
     }
+    catch (error) {
+        return res.status(400).json({
+          message: error.message
+        });
+      }
   }
 
   async loginByPhoneNumber(req, res) {

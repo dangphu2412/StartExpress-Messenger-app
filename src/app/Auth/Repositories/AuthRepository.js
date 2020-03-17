@@ -18,7 +18,7 @@ class AuthRepository extends BaseRepository {
 
   checkUserEmail(data) {
     return this.getBy({
-      email: data.email,
+      email: data,
     });
   }
 
@@ -34,10 +34,10 @@ class AuthRepository extends BaseRepository {
       lastName: data.lastName,
       email: data.email,
       password: data.password,
-      avatar: 'unknown',
-      phoneNumber: 'unknown',
-      city: 'unknown',
-      describe: 'unknown',
+      avatar: ' ',
+      phoneNumber: ' ',
+      city: ' ',
+      describe: ' ',
     });
   }
 
@@ -54,10 +54,12 @@ class AuthRepository extends BaseRepository {
   }
 
   loginByEmail(data) {
-    return this.getBy({
-      email: data.email,
-      password: data.password,
+    const { email, password } = data;
+    const query = model.User.find({
+      email,
+      password,
     });
+    return query;
   }
 
   friendInfor() {
@@ -88,13 +90,16 @@ class AuthRepository extends BaseRepository {
   }
 
   createUserChat(user) {
-    const createMongo = model.User
+    const { id, name, email, password, avatar } = user;
+    const createUser = model.User
     .create({
-      id: user.id,
-      name: user.firstName,
-      avatar: user.avatar,
+      id,
+      name,
+      email,
+      password,
+      avatar,
     });
-    return createMongo;
+    return createUser;
   }
 
   async queryUser(data) {
