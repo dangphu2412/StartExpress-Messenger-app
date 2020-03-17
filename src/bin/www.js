@@ -4,16 +4,17 @@
  * Module dependencies.
  */
 
+import http from 'http';
 import debugLib from 'debug';
-import config from '../app';
+import app from '../app';
 
 const debug = debugLib('messenger:server');
 /**
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || '3000');
-config.app.set('port', port);
+const APP_PORT = normalizePort(process.env.PORT || '3000');
+app.set('port', APP_PORT);
 
 /**
  * Create HTTP server.
@@ -22,27 +23,29 @@ config.app.set('port', port);
 /**
  * Listen on provided port, on all network interfaces.
  */
-config.server.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
+const server = http.createServer(app);
+
+server.listen(APP_PORT, () => {
+  console.log(`Server is listening on port ${APP_PORT}`);
 });
-config.server.on('error', onError);
-config.server.on('listening', onListening);
+server.on('error', onError);
+server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
  */
 
 function normalizePort(val) {
-  const port = parseInt(val, 10);
+  const PORT = parseInt(val, 10);
 
-  if (isNaN(port)) {
+  if (isNaN(PORT)) {
     // named pipe
     return val;
   }
 
-  if (port >= 0) {
+  if (PORT >= 0) {
     // port number
-    return port;
+    return PORT;
   }
 
   return false;
@@ -58,8 +61,8 @@ function onError(error) {
   }
 
   const bind = typeof port === 'string'
-    ? `Pipe ${port}`
-    : `Port ${port}`;
+    ? `Pipe ${APP_PORT}`
+    : `Port ${APP_PORT}`;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -81,7 +84,7 @@ function onError(error) {
  */
 
 function onListening() {
-  const addr = config.server.address();
+  const addr = server.address();
   const bind = typeof addr === 'string'
     ? `pipe ${addr}`
     : `port ${addr.port}`;

@@ -13,13 +13,12 @@
         input.form-control(type='text' placeholder='Search chat')
       .sidebar-body(tabindex='4' style='overflow: hidden; outline: none;')
         ul.list-group.list-group-flush
-          each friend in friendList
                 li.list-group-item
-                  #friendId(data-friend = friend.received)
+                  #friendId
                     figure.avatar
                       img.rounded-circle(src='/dist/images/women_avatar5.jpg')
                   .users-list-body
-                    h5=friend.firstName
+                    h5 Name
                     p Lorem ipsum dolor sitsdc sdcsdc sdcsdcs
                     .users-list-action.action-toggle
                       .dropdown

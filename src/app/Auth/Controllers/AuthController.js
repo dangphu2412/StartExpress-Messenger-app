@@ -96,11 +96,10 @@ class AuthController extends BaseController {
           user._id = chatId._id;
 
           const token = jwt.sign(user, process.env.ACCESS_TOKEN_KEY);
-          console.log(token)
 
           req.session.user = user;
           req.session.save();
-          return res.status(200).json({
+          return res.status(201).json({
             message: 'Login success',
             token
           });

@@ -14,9 +14,7 @@
               input#group_name.form-control(type='text')
             .form-group
               select#userFriend.hidden(name="states[]" multiple="multiple")
-                each friend in friendInfo
-                  if friend.id == user.id
-                    option(selected data-id=friend.id data-objId=friend._id)=friend.name
+                option(selected) Name 
 
               .dropdown
                 button#dropdownMenuButton.btn.btn-outline-light.w-100(type='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
@@ -24,12 +22,10 @@
                 #menuSearchUser.dropdown-menu.w-100(aria-labelledby='dropdownMenuButton')
                   input#searchUser.form-control(type='text')
                   #userOption
-                    each friend in friendInfo
-                      if friend.id != user.id
-                        .dropdown-item
-                          figure.avatar
-                            img.rounded-circle(src='/dist/images/man_avatar2.jpg')                        
-                          a.w-100(href='#' data-id=friend.id data-objId=friend._id data-name=friend.name)=friend.name
+                    .dropdown-item
+                      figure.avatar
+                        img.rounded-circle(src='/dist/images/man_avatar2.jpg')                        
+                      a.w-100(href='#')=Name
             .form-group
               .avatar-group#userChosenGroup
                 label.pr-2.col-form-label Member
