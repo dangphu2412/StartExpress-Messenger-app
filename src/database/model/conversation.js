@@ -5,11 +5,10 @@ const { Schema } = mongoose;
 const conversationSchema = new Schema({
     name: String,
     description: String,
-    userIds: [{
+    membersId: [{
         type: Schema.Types.ObjectId,
         ref: 'user',
     }],
-    memberId: [Number],
     latestMessage: String,
     latestMember: String,
     },

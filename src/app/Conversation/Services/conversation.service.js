@@ -1,5 +1,5 @@
-import Repository from '../Repositories/ConversationRepository';
-import AuthRepository from '../../Auth/Repositories/AuthRepository';
+import Repository from '../Repositories/conversation.repository';
+import AuthRepository from '../../Auth/Repositories/auth.repository';
 
 class ConversationService {
   static conversationService;

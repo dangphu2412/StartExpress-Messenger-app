@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import BaseController from '../../../infrastructure/Controllers/BaseController';
-import AuthService from '../Services/AuthService';
+import AuthService from '../Services/auth.service';
 import admin from '../../../config/firebase';
 
 class AuthController extends BaseController {
@@ -110,6 +110,7 @@ class AuthController extends BaseController {
         };
 
         const token = jwt.sign(user, process.env.ACCESS_TOKEN_KEY);
+        console.log(token);
         // Set cookie contain token
         res.cookie('token', token, cookieOptions);
         return res.status(200).json({

@@ -1,4 +1,4 @@
-import Repository from '../Repositories/AuthRepository';
+import Repository from '../Repositories/auth.repository';
 
 class AuthService {
   static authService;

@@ -1,7 +1,7 @@
 import moment from 'moment';
 import BaseController from '../../../infrastructure/Controllers/BaseController';
-import AuthService from '../../Auth/Services/AuthService';
-import ConversationService from '../Services/ConversationService';
+import AuthService from '../../Auth/Services/auth.service';
+import ConversationService from '../Services/conversation.service';
 
 class ConversationController extends BaseController {
   constructor() {
