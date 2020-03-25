@@ -1,11 +1,10 @@
 exports.up = (knex) => knex.schema.createTable('friends', (table) => {
-    table.increments('id').primary();
-    table.integer('userId').unsigned().notNullable();
-    table.foreign('userId').references('id').inTable('users').onDelete('CASCADE');
-    table.integer('friendId').notNullable();
-    table.foreign('friendId').references('id').inTable('users').onDelete('CASCADE');
-    table.integer('received').notNullable();
-    table.varchar('status', 4).notNullable();
+    table.increments('friend_id').primary();
+    table.integer('senderId').unsigned().notNullable();
+    table.foreign('senderId').references('id').inTable('users').onDelete('CASCADE');
+    table.integer('receiverId').notNullable();
+    table.foreign('receiverId').references('id').inTable('users').onDelete('CASCADE');
+    table.varchar('status', 2).notNullable();
     table.timestamp('createdAt').defaultTo(knex.fn.now());
     table.timestamp('updatedAt').defaultTo(knex.fn.now());
 });

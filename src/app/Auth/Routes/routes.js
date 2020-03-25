@@ -1,27 +1,22 @@
 import express from 'express';
-import Controller from '../Controllers/AuthController';
+import renderController from '../Controllers/render.auth.controller';
+import apiController from '../Controllers/auth.controller';
 
 const router = express.Router();
-const controller = new Controller();
-
 // Page call
-router.get('/register', controller.callMethod('register'));
-router.get(('/register-email'), controller.callMethod('registerEmailPage'));
-router.get('/register-phone-number', controller.callMethod('registerPhoneNumberPage'));
+router.get('/register', renderController.registerPage);
+router.get(('/register-email'), renderController.registerEmail);
+router.get('/register-phone-number', renderController.registerPhone);
 
-router.get('/login', controller.callMethod('login'));
-router.get('/login-email', controller.callMethod('loginEmailPage'));
-router.get('/login-phone-number', controller.callMethod('loginPhoneNumberPage'));
-
-router.get('/reset-password', controller.callMethod('resetPassword'));
-
-router.get('/logout', controller.callMethod('logout'));
+router.get('/login', renderController.loginPage);
+router.get('/login-email', renderController.loginEmail);
+router.get('/login-phone-number', renderController.loginPhone);
 
 // Api call
-router.post('/api/register-email', controller.callMethod('registerByEmail'));
-router.post('/api/login-email', controller.callMethod('loginByEmail'));
-router.post('/api/login-phone-number', controller.callMethod('loginByPhoneNumber'));
-router.post('/api/register-phone-number', controller.callMethod('registerByPhoneNumber'));
-
+router.post('/api/register-email', apiController.register.registerByEmail);
+router.post('/api/register-phone-number', apiController.register.registerByPhoneNumber);
+router.post('/api/login-email', apiController.login.loginByEmail);
+router.post('/api/login-phone-number', apiController.login.loginByPhoneNumber);
+router.post('/api/logout', apiController.logout);
 
 export default router;

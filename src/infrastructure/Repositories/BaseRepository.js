@@ -1,62 +1,52 @@
 import knex from '../../database/connection';
-import { Conversation } from '../../database/model/index';
 
-class BaseRepository {
-  constructor() {
-    this.tableName = this.getTableName();
-  }
-
-  cloneQuery() {
-    return knex(this.tableName).clone();
-  }
-
-  list(columns = ['*']) {
-    return this.cloneQuery().select(columns);
-  }
-
-  listBy(clauses = {}, columns = ['*']) {
-    return this.cloneQuery().where(clauses).select(columns);
-  }
-
-  listByFirst(clauses = {}, columns = []) {
-    return this.cloneQuery().where(clauses).select(columns).first();
-  }
-
-  count() {
-    return this.cloneQuery().count();
-  }
-
-  countBy(clauses = {}) {
-    return this.cloneQuery().where(clauses).count();
-  }
-
-  getBy(clauses = {}, columns = ['*']) {
-    return this.cloneQuery().where(clauses).select(columns).first();
-  }
-
-  getByAnother(clauses = {}, orClauses = {}, columns = ['*']) {
-    return this.cloneQuery().where(clauses).orWhere(orClauses).select(columns).first();
-  }
-
-  joinListBy(table, tableContent, thisContent, clauses = {}, columns = []) {
-    return this.cloneQuery().leftJoin(table, tableContent, thisContent).where(clauses).select(columns);
-  }
-
-  joinListOne(table, tableContent, thisContent, clauses = {}) {
-    return this.cloneQuery().leftJoin(table, tableContent, thisContent).where(clauses).first();
-  }
-
-  create(attributes, trx, returning = ['*']) {
-    return this.cloneQuery().insert(attributes).returning(returning);
-  }
-
-  update(clauses, attributes, returning = ['*']) {
-    return this.cloneQuery().where(clauses).update(attributes).returning(returning);
-  }
-
-  delete(clauses) {
-    return this.cloneQuery().where(clauses).delete();
-  }
+function list(table, columns = ['*']) {
+  return knex(table).select(columns);
 }
 
-export default BaseRepository;
+function listBy(table, clauses = {}, columns = ['*']) {
+  return knex(table).where(clauses).select(columns);
+}
+
+function listByFirst(table, clauses = {}, columns = []) {
+  return knex(table).where(clauses).select(columns).first();
+}
+
+function getBy(table, clauses = {}, columns = ['*']) {
+  return knex(table).where(clauses).select(columns).first();
+}
+
+function create(table, attributes, trx, returning = ['*']) {
+  return knex(table).insert(attributes).returning(returning);
+}
+// function count(table) {
+//   return knex(table).count();
+// }
+
+// function countBy(table, clauses = {}) {
+//   return knex(table).where(clauses).count();
+// }
+
+// function getByAnother(table, clauses = {}, orClauses = {}, columns = ['*']) {
+//   return knex(table).where(clauses).orWhere(orClauses).select(columns).first();
+// }
+
+// function joinListBy(table, tableContent, thisContent, clauses = {}, columns = []) {
+//   return knex(table).leftJoin(table, tableContent, thisContent).where(clauses).select(columns);
+// }
+
+// function joinListOne(table, tableContent, thisContent, clauses = {}) {
+//   return knex(table).leftJoin(table, tableContent, thisContent).where(clauses).first();
+// }
+
+// function update(table, clauses, attributes, returning = ['*']) {
+//   return knex(table).where(clauses).update(attributes).returning(returning);
+// }
+
+export default {
+  list,
+  listBy,
+  listByFirst,
+  create,
+  getBy,
+};
