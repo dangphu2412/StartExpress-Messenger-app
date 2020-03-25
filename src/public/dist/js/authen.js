@@ -21,13 +21,13 @@ window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-contai
         const code = $('input[name="code"]').val();
         await confirmationResult.confirm(code);
   
-        const idToken = await firebase.auth().currentUser.getIdToken(true);
+        const password = await firebase.auth().currentUser.getIdToken(true);
         
         const body = {
           lastName,
           firstName,
           phoneNumber,
-          idToken
+          password
         }
   
         $.ajax({
@@ -114,6 +114,8 @@ window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-contai
             url: '/api/login-email',
             data: data,
             success: function (xhr,status) {
+                const data = xhr.token;
+                window.localStorage.setItem('sc', data);
                 window.location.href = '/';
             },
             error: function (error) {

@@ -3,10 +3,9 @@ import Controller from '../Controllers/conversation.controller';
 import middleware from '../../Auth/Middleware/auth.middleware';
 
 const router = express.Router();
-const controller = new Controller();
 
-router.get('/', controller.callMethod('redirectCoreView'));
+router.get('/', Controller.redirectCoreView);
 
-router.get('/conversations', middleware.verifyAuth, controller.callMethod('conversation'));
+router.get('/conversations', middleware.renderVerifyAuth, Controller.conversation);
 
 export default router;
