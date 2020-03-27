@@ -2,18 +2,24 @@ import regisRepo from '../Repositories/register.repo';
 
 class Register {
     constructor(data) {
+        if (!data.email) {
+            this.userName = {
+                email: '',
+                phone: data.phone,
+            };
+        }
+        if (!data.phone) {
+            this.userName = {
+                email: data.email,
+                phone: '',
+            };
+        }
         this.data = data;
     }
 
     hasData() {
         if (!this.data) {
             throw new Error('Your data is empty');
-        }
-        if (!this.data.email) {
-            this.data.email = '';
-        }
-        if (!this.data.phone) {
-            this.data.phone = '';
         }
     }
 
@@ -31,16 +37,16 @@ class Register {
         return regisRepo.checkUserPhone(this.data.phoneNumber);
     }
 
-    createUserChat(userData) {
-        return regisRepo.createUserChat(userData);
+    createUserChat(userData, userId, userName) {
+        return regisRepo.createUserChat(userData, userId, userName);
     }
 
     async register() {
         this.hasData();
         const name = `${this.data.firstName} ${this.data.lastName}`;
-        this.name = name;
-        await regisRepo.register(this.data);
-        await this.createUserChat(this.data);
+        this.data.name = name;
+        const userId = (await regisRepo.register(this.data, this.userName))[0];
+        await this.createUserChat(this.data, userId, this.userName);
     }
 }
 

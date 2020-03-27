@@ -9,9 +9,10 @@ async function loginByEmail(req, res) {
         const service = new LoginService(data);
 
         const userData = (await service.validateLoginByEmail())[0];
-
+        const userId = await service.getUserId();
+        console.log(userId);
         if (userData) {
-            const token = service.generateToken(userData);
+            const token = service.generateToken(userData, userId);
             res.cookie('token', token, cookieOptions);
             return res.status(200).json({
                 message: 'Login success',

@@ -108,6 +108,7 @@ window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-contai
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
       const user = firebase.auth().currentUser;
+      console.log(user);
       if (user.emailVerified) {
           $.ajax({
             type: 'POST',
@@ -125,6 +126,8 @@ window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-contai
             }
           })
       }
+      event.preventDefault();
+      $('#alertverifyLogin').css('display','block');
     } catch (error) {
       event.preventDefault();
       $('#alertverifyLogin').css('display','block');

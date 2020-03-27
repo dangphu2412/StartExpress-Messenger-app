@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
+    userId: String,
     name: String,
     email: {
         type: String,
@@ -10,7 +11,7 @@ const userSchema = new Schema({
     },
     phone: {
         type: String,
-        default: ' ',
+        default: '',
     },
     password: {
         type: String,

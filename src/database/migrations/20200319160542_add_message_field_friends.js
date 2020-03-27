@@ -5,5 +5,5 @@ exports.up = (knex) => knex.schema.table('friends', (table) => {
 
 
 exports.down = (knex) => knex.schema.table('friends', (table) => {
-        table.dropColumn('message');
+    table.dropColumn('message');
 });

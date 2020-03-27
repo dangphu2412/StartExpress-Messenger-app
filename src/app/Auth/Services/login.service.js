@@ -20,13 +20,18 @@ class Login {
         return loginRepo.loginByPhone(this.phone, this.password);
     }
 
-    generateToken(userData) {
+    generateToken(userData, userId) {
         const user = {
             _token: userData._id,
             name: userData.name,
+            id: userId,
         };
         const token = jwt.sign(user, process.env.ACCESS_TOKEN_KEY);
         return token;
+    }
+
+    getUserId() {
+        return loginRepo.getUserId(this.email);
     }
 }
 

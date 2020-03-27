@@ -1,16 +1,17 @@
 import express from 'express';
 import renderController from '../Controllers/render.auth.controller';
 import apiController from '../Controllers/auth.controller';
+import validate from '../Middleware/auth.middleware';
 
 const router = express.Router();
 // Page call
-router.get('/register', renderController.registerPage);
-router.get(('/register-email'), renderController.registerEmail);
-router.get('/register-phone-number', renderController.registerPhone);
+router.get('/register', validate.renderNotVerifyAuth, renderController.registerPage);
+router.get(('/register-email'), validate.renderNotVerifyAuth, renderController.registerEmail);
+router.get('/register-phone-number', validate.renderNotVerifyAuth, renderController.registerPhone);
 
-router.get('/login', renderController.loginPage);
-router.get('/login-email', renderController.loginEmail);
-router.get('/login-phone-number', renderController.loginPhone);
+router.get('/login', validate.renderNotVerifyAuth, renderController.loginPage);
+router.get('/login-email', validate.renderNotVerifyAuth, renderController.loginEmail);
+router.get('/login-phone-number', validate.renderNotVerifyAuth, renderController.loginPhone);
 
 // Api call
 router.post('/api/register-email', apiController.register.registerByEmail);

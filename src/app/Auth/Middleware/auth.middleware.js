@@ -14,15 +14,21 @@ function renderVerifyAuth(req, res, next) {
     }
 }
 
-function verifyAuth(req, res, next) {
-    const header = req.headers['authorization'];
-    const token = header.split(' ')[1];
-    const user = jwt.verify(token, process.env.ACCESS_TOKEN_KEY);
-    console.log(user);
-    return next();
+function renderNotVerifyAuth(req, res, next) {
+    try {
+        const hasToken = req.cookies.token;
+        const accessKey = process.env.ACCESS_TOKEN_KEY;
+        if (hasToken) {
+            jwt.verify(hasToken, accessKey);
+            return res.redirect('/');
+        }
+        return next();
+    } catch (error) {
+        return next();
+    }
 }
 
 export default {
     renderVerifyAuth,
-    verifyAuth,
+    renderNotVerifyAuth,
 };

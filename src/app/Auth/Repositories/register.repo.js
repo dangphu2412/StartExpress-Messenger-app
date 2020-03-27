@@ -1,32 +1,32 @@
 import query from '../../../infrastructure/Repositories/BaseRepository';
 import model from '../../../database/model/index';
 
-function checkUserEmail(data) {
+function checkUserEmail(email) {
     return query.getBy('users', {
-      email: data,
+      email,
     });
 }
 
-function register(data) {
-  const { name, email, phone, password } = data;
+function register(data, userName) {
+  const { name, password } = data;
+  const { email, phone } = userName;
   return query.create('users', {
     name,
     email,
     phone,
     password,
-  });
+  }, 'id');
 }
 
-function createUserChat(user) {
-  const {
-    name, email, password, avatar, phone,
-  } = user;
+function createUserChat(data, userId, userName) {
+  const { name, password } = data;
+  const { email, phone } = userName;
   return model.User
     .create({
+      userId,
       name,
       email,
       password,
-      avatar,
       phone,
     });
 }

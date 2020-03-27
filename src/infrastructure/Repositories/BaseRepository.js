@@ -16,7 +16,7 @@ function getBy(table, clauses = {}, columns = ['*']) {
   return knex(table).where(clauses).select(columns).first();
 }
 
-function create(table, attributes, trx, returning = ['*']) {
+function create(table, attributes, returning = ['*']) {
   return knex(table).insert(attributes).returning(returning);
 }
 // function count(table) {
