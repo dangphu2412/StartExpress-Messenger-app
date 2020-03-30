@@ -11,8 +11,7 @@ function loginByEmail(email, password) {
 function getUserId(email) {
     return query.getBy('users', {
         email,
-    },
-    ('id'));
+    }, 'id');
 }
 
 function loginByPhone(phone, password) {

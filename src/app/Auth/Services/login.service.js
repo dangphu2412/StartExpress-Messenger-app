@@ -23,7 +23,7 @@ class Login {
     generateToken(userData, userId) {
         const user = {
             _token: userData._id,
-            name: userData.name,
+            userEmail: this.email,
             id: userId,
         };
         const token = jwt.sign(user, process.env.ACCESS_TOKEN_KEY);
