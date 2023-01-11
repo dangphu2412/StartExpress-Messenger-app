@@ -20,7 +20,7 @@
     "express-validator": "^6.4.0",
     "firebase-admin": "^8.9.2",
     "http-errors": "~1.6.3",
-    "knex": "^0.19.5",
+    "knex": "^2.4.0",
     "method-override": "^3.0.0",
     "moment": "^2.24.0",
     "mongoose": "^5.9.4",
